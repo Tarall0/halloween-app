@@ -1,0 +1,120 @@
+/* Ghost.css */
+
+.ghost-container{
+    max-width: 100%;
+    max-height: 100%;
+    
+  }
+  
+  .ghost {
+    width: 70px;
+    height: 120px;
+    background-color: #fff;
+    position: absolute;
+    border-radius: 50% 50% 0 0;
+    transition: all 1s ease-in-out;
+    rotate: 10deg;
+    opacity: 0;
+    scale: 0.7;
+    
+  }
+  
+  @keyframes floatAnimation {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .ghost .body {
+    height: 40px;
+    width: 50px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .ghost .head {
+    width: 25px;
+    height: 25px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: -60px;
+    left: 25px;
+  }
+  
+  .head .eyes{
+    display: flex;
+  }
+  
+  .head .eye {
+    width: 10px;
+    height: 10px;
+    background-color: var(--altDark);
+    border-radius: 50%;
+  }
+  
+   .left-eye {
+    transform: translateX(-10px);
+  }
+  
+   .right-eye {
+    transform: translateX(10px);
+  }
+  
+  .head .mouth {
+    width: 20px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-10px);
+    top: 30px;
+  }
+  
+  .ghost .tail {
+    width: 30px;
+    height: 40px;
+    background-color: #fff;
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-15px);
+    border-radius: 50% 50% 0 0;
+    z-index: -1;
+  }
+
+
+.ghost {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 2s, transform 0.5s;
+    animation: floatGhost 4s ease-in-out infinite;
+  }
+  
+
+
+  @keyframes floatGhost {
+    0% {
+      transform: translateY(0) rotate(0) scale(1);
+      
+    }
+    50% {
+      transform: translateY(-20px) rotate(0) scale(1.1);
+      opacity: .5;
+    }
+    100% {
+      transform: translateY(0) rotate(0) scale(1);
+     
+    }
+  }
+
+
+  

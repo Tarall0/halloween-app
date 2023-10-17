@@ -43,7 +43,8 @@ const Countdown = () => {
     <>
         <FullMoon/>
         <Ghosts/>
-        <Pumpkin/>
+       
+      
         <div className='halloween-box'>
         <h1 className='gradient-text'>Halloween Countdown</h1>
         <div className="countdown">

@@ -1,39 +1,41 @@
-"use client"
 import React, { useEffect, useState } from 'react';
 import Ghost from './Ghost';
+import "../styles/ghosts.css";
 
 export default function Ghosts() {
   const [ghosts, setGhosts] = useState([]);
+  let numberGhosts = 4;
 
   useEffect(() => {
     const generateRandomPosition = () => {
       return {
-        transform: `translate(${Math.random() * 100}vw, ${Math.random() * 100}vh)`,
+        top: `${Math.random() * 80 + 10}%`,
+        left: `${Math.random() * 80 + 10}%`,
+        rotate: `${Math.random() *360}deg`,
+        opacity: `${Math.random() * 0.5 }`, 
+        animationDuration: `${Math.random() * 5 + 2}s`, 
       };
     };
 
-    const ghostComponents = [
-      <Ghost key={1} {...generateRandomPosition()} />,
-      <Ghost key={2} {...generateRandomPosition()} />,
-      <Ghost key={3} {...generateRandomPosition()} />,
-    ];
+    const ghostComponents = [];
+
+    for (let i = 0; i < numberGhosts; i++) {
+      ghostComponents.push(
+        <Ghost key={i} style={generateRandomPosition()} />
+      );
+    }
 
     setGhosts(ghostComponents);
 
-    setTimeout(() => {
-      const ghostElements = document.querySelectorAll('.ghost');
-      ghostElements.forEach((ghost, index) => {
-        setTimeout(() => {
-          ghost.style.opacity = '1';
-          ghost.style.transform = ghostComponents[index].props.transform;
-        }, index * 1000);
-      });
-    }, 1000);
   }, []);
 
   return (
     <div className="ghost-container">
-      {ghosts}
+      {ghosts.map((ghost, index) => (
+        <div key={index}>
+          {ghost}
+        </div>
+      ))}
     </div>
   );
 }

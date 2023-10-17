@@ -25,6 +25,11 @@ body{
   padding: 1em;
   padding-top: 2em;
   text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
 }
 
 
@@ -182,139 +187,4 @@ left: 4px;
 border-radius: 100%;
 }
 
-/* Ghost.css */
 
-.ghost-container{
-  max-width: 100vw;
-  max-height: 100vh;
-  position: absolute;
-}
-
-.ghost {
-  width: 100px;
-  height: 150px;
-  background-color: #fff;
-  position: absolute;
-  border-radius: 50% 50% 0 0;
-  bottom: 0;
-  transition: all 1s ease-in-out;
-  rotate: 0deg;
-  opacity: 0;
-  
-}
-
-@keyframes floatAnimation {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.ghost .body {
-  height: 70px;
-  width: 100px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.ghost .head {
-  width: 50px;
-  height: 50px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: -50px;
-  left: 25px;
-}
-
-.head .eyes{
-  display: flex;
-}
-
-.head .eye {
-  width: 20px;
-  height: 20px;
-  background-color: var(--altDark);
-  border-radius: 50%;
-}
-
- .left-eye {
-  transform: translateX(-10px);
-}
-
- .right-eye {
-  transform: translateX(10px);
-}
-
-.head .mouth {
-  width: 20px;
-  height: 10px;
-  background-color: #333;
-  border-radius: 0 0 10px 10px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-10px);
-  top: 30px;
-}
-
-.ghost .tail {
-  width: 30px;
-  height: 40px;
-  background-color: #fff;
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-15px);
-  border-radius: 50% 50% 0 0;
-  z-index: -1;
-}
-
-/* Pumpkin body */
-.pumpkin {
-  width: 100px;
-  height: 100px;
-  background: #ff6600;
-  border-radius: 50%;
-  position: relative;
-}
-
-/* Pumpkin face */
-.eyes {
-  width: 10px;
-  height: 10px;
-  background: black;
-  border-radius: 50%;
-  position: absolute;
-  top: 20px;
-  left: 30px;
-}
-
-.eyes.right {
-  left: 60px;
-}
-
-.nose {
-  width: 10px;
-  height: 15px;
-  background: black;
-  border-radius: 50%;
-  position: absolute;
-  top: 40px;
-  left: 45px;
-}
-
-.mouth {
-  width: 40px;
-  height: 20px;
-  background: black;
-  border-radius: 50%;
-  position: absolute;
-  top: 60px;
-  left: 30px;
-}

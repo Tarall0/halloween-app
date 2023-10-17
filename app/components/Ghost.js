@@ -1,15 +1,8 @@
 
-
-export default function Ghost(top, left, transform) {
-
-    const ghostStyle = {
-        top,
-        left,
-        transform: transform,
-      };
+export default function Ghost({style}) {
 
   return (
-    <div className="ghost" style={ghostStyle}>
+    <div className="ghost" style={style}>
       <div className="body">
         <div className="head">
           <div className="eyes">
