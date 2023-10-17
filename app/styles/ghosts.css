@@ -1,8 +1,8 @@
 /* Ghost.css */
 
 .ghost-container{
-    max-width: calc(100% - 2em);
-    max-height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     
   }
   
