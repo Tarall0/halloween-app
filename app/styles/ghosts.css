@@ -3,7 +3,7 @@
 .ghost-container{
     width: 100vw;
     height: calc(100vh - 3em);
-    position: absolute;
+    position: fixed;
     z-index: 2;
     overflow-x: hidden;
     
