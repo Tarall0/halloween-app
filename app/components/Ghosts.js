@@ -4,14 +4,15 @@ import "../styles/ghosts.css";
 
 export default function Ghosts() {
   const [ghosts, setGhosts] = useState([]);
-  let numberGhosts = 4;
+  let numberGhosts = 5;
 
   useEffect(() => {
     const generateRandomPosition = () => {
+
       return {
         top: `${Math.random() * 80 + 10}%`,
         left: `${Math.random() * 80 + 10}%`,
-        rotate: `${Math.random() *360}deg`,
+        rotate: `-${Math.random() *60}deg`,
         opacity: `${Math.random() * 0.5 }`, 
         animationDuration: `${Math.random() * 5 + 2}s`, 
       };

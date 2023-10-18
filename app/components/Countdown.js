@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import FullMoon from './FullMoon';
 import Ghosts from './Ghosts';
 import Pumpkin from './Pumpkin';
+import Image from 'next/image';
 
 const Countdown = () => {
     const [countdown, setCountdown] = useState({
@@ -42,9 +43,9 @@ const Countdown = () => {
   return (
     <>
         <FullMoon/>
-        <Ghosts/>
-       
-      
+        <Ghosts/>       
+        <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill'></Image>
+        
         <div className='halloween-box'>
         <h1 className='gradient-text'>Halloween Countdown</h1>
         <div className="countdown">

@@ -80,7 +80,7 @@ body{
 .moon-wrapper{
   position: absolute;
   opacity: .6;
-  bottom: 10%;
+  top: 5%;
 }
   
 .moon {
@@ -112,6 +112,7 @@ animation: moonAnimate 5s infinite;
     0px 0px 20px 0px rgb(250,250,250),
     0px 0px 50px 0px rgb(250,250,250),
     0px 0px 400px 0px rgb(250,250,250);
+    top: 8%;
   }
 
   100%{
@@ -119,6 +120,7 @@ animation: moonAnimate 5s infinite;
     0px 0px 10px 0px rgb(250,250,250),
     0px 0px 50px 0px rgb(250,250,250),
     0px 0px 500px 0px rgb(250,250,250);
+    top: 5%;
   }
 }
 
@@ -189,3 +191,8 @@ border-radius: 100%;
 }
 
 
+.spooky-hill{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

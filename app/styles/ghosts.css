@@ -19,17 +19,14 @@
     rotate: 10deg;
     opacity: 0;
     scale: 0.7;
+    box-shadow: 0px 3px 6px;
+    box-shadow: 0 0 8px #ffffff,
+        0 0 12px #fff205,
+        0 0 16px #149330,
+        0 0 18px #149330;
     
   }
-  
-  @keyframes floatAnimation {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
+
   
   .ghost .body {
     height: 40px;
@@ -73,9 +70,9 @@
   
   .head .mouth {
     width: 20px;
-    height: 10px;
+    height: 20px;
     background-color: #333;
-    border-radius: 0 0 10px 10px;
+    border-radius: 100%;
     position: absolute;
     left: 50%;
     transform: translateX(-10px);
@@ -107,11 +104,17 @@
   @keyframes floatGhost {
     0% {
       transform: translateY(0) rotate(0) scale(1);
+     
       
     }
     50% {
-      transform: translateY(-20px) rotate(0) scale(1.1);
+      transform: translateY(-20px) rotate(10deg) scale(1.1);
       opacity: .5;
+      box-shadow: 0 0 2px #FFFFFF,
+        0 0 2px #fff205,
+        0 0 4px #149330,
+        0 0 6px #149330;
+      
     }
     100% {
       transform: translateY(0) rotate(0) scale(1);
