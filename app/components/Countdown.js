@@ -30,8 +30,9 @@ const Countdown = () => {
             if (permission === 'granted') {
               console.log('Notification permission granted.');
               setShowMessage(false);
+              setShowSuccess(true);
               setTimeout(() => {
-                setShowSuccess(true);
+                setShowSuccess(false);
               }, 5000)
               const notification = new Notification('🎃 Hello!', {
                 body: 'This is just a test-notification.',
