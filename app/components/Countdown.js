@@ -39,7 +39,7 @@ const Countdown = () => {
           Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
               console.log('Notification permission granted.');
-              registerServiceWorker();
+              
               setShowMessage(false);
               setShowSuccess(true);
               setTimeout(() => {
@@ -48,7 +48,7 @@ const Countdown = () => {
               const notification = new Notification('🎃 Hello!', {
                 body: 'This is just a test-notification.',
               });
-        
+              registerServiceWorker(notification);
 
               notification.onclick = () => {
                 console.log("notification cliekced");
