@@ -16,10 +16,41 @@ const Countdown = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showMessage, setShowMessage] = useState(true);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showUnnotified, setShowUnnotified] = useState(false);
 
     const handleDimiss = () => {
       setShowMessage(false);
     }
+
+  
+    const requestNotificationPermission = () => {
+        if ('Notification' in window) {
+          Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+              console.log('Notification permission granted.');
+              setShowMessage(false);
+              setTimeout(() => {
+                setShowSuccess(true);
+              }, 5000)
+              const notification = new Notification('🎃 Hello!', {
+                body: 'This is just a test-notification.',
+              });
+
+              notification.onclick = () => {
+                console.log("notification cliekced");
+              }
+            } else if(permission=== 'denied') {
+              console.error('Notification permission denied.');
+              setShowMessage(false);
+              setTimeout(() => {
+                setShowUnnotified(true);
+              }, 5000)
+            }
+          });
+        }
+      };
+    
 
     // Calculate days hours minutes and seconds until Halloween
     useEffect(() => {
@@ -73,13 +104,27 @@ const Countdown = () => {
             <div className='not-halloween'>
               <p>🚀 Do you want to get a notification?</p>
               <div className='halloween-buttons'>
-                <button>🔔 Notify</button>
+                <button onClick={requestNotificationPermission}>🔔 Notify</button>
                 <button onClick={handleDimiss}><b>X</b> Dimiss</button>
               </div>
             </div>
             )
-             )}
-             
+        )}
+
+        {showSuccess ? (
+          <div className='success-popup'>
+            <p><b>🔥 Sweet!</b> I will notify you when it's time</p>
+          </div>
+
+        ) : (
+         showUnnotified &&
+         (
+          <div className='success-popup'>
+            <p><b>👌 Ok!</b> Feel free to change your device settings anytime </p>
+          </div>
+         ) 
+        )}
+
         <FullMoon/>
         <Ghosts/>       
         <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
