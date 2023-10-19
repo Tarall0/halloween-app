@@ -12,19 +12,6 @@ function FullMoon() {
                 </div>
             </div>
         </div>
-
-        <div className="planet">
-            <div className="orbit">
-            </div>
-            <div className="orbit">
-            </div>
-    <div className="purple">
-    </div>
-    <div className="small">
-    </div>
-    <div className="small left">
-    </div>
-  </div>
     </>
   )
 }
