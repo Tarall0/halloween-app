@@ -23,12 +23,23 @@ const Countdown = () => {
       setShowMessage(false);
     }
 
+    const registerServiceWorker = () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+          // Service worker registered.
+        }).catch((error) => {
+          console.error('Service worker registration failed:', error);
+        });
+      }
+    };
+
   
     const requestNotificationPermission = () => {
         if ('Notification' in window) {
           Notification.requestPermission().then((permission) => {
             if (permission === 'granted') {
               console.log('Notification permission granted.');
+              registerServiceWorker();
               setShowMessage(false);
               setShowSuccess(true);
               setTimeout(() => {
@@ -37,6 +48,7 @@ const Countdown = () => {
               const notification = new Notification('🎃 Hello!', {
                 body: 'This is just a test-notification.',
               });
+        
 
               notification.onclick = () => {
                 console.log("notification cliekced");
