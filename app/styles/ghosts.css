@@ -22,8 +22,8 @@
     box-shadow: 0px 3px 6px;
     box-shadow: 0 0 8px #ffffff,
         0 0 12px #fff205,
-        0 0 16px #149330,
-        0 0 18px #149330;
+        0 0 16px var(--green),
+        0 0 18px var(--lightGreen);
     
   }
 
@@ -112,8 +112,8 @@
       opacity: .5;
       box-shadow: 0 0 2px #FFFFFF,
         0 0 2px #fff205,
-        0 0 4px #149330,
-        0 0 6px #149330;
+        0 0 4px var(--green),
+        0 0 6px var(--lightGreen);
       
     }
     100% {

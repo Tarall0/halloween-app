@@ -13,7 +13,7 @@ export default function Ghosts() {
         top: `${Math.random() * 80 + 10}%`,
         left: `${Math.random() * 80 + 10}%`,
         rotate: `-${Math.random() *60}deg`,
-        opacity: `${Math.random() * 0.5 }`, 
+        opacity: `${Math.random() * 0.4 }`, 
         animationDuration: `${Math.random() * 5 + 2}s`, 
       };
     };

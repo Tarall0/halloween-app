@@ -4,6 +4,7 @@ import FullMoon from './FullMoon';
 import Ghosts from './Ghosts';
 import Pumpkin from './Pumpkin';
 import Image from 'next/image';
+import Halloween from './Halloween';
 
 const Countdown = () => {
     const [countdown, setCountdown] = useState({
@@ -12,39 +13,76 @@ const Countdown = () => {
         minutes: 0,
         seconds: 0,
       });
+    const [isLoading, setIsLoading] = useState(true);
+    const [timeRemaining, setTimeRemaining] = useState(0);
+    const [showMessage, setShowMessage] = useState(true);
 
-  // Calculate days hours minutes and seconds until Halloween (October 31)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const today = new Date();
-      const halloweenDate = new Date(today.getFullYear(), 9, 31); // 9 represents October (0-based index)
+    const handleDimiss = () => {
+      setShowMessage(false);
+    }
 
-      if (today > halloweenDate) {
-        halloweenDate.setFullYear(today.getFullYear() + 1);
-      }
+    // Calculate days hours minutes and seconds until Halloween
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const today = new Date();
+        const halloweenDate = new Date(today.getFullYear(), 9, 31); // 9 represents October as 0 based index
 
-      const timeRemaining = halloweenDate - today;
+        if (today > halloweenDate) {
+          halloweenDate.setFullYear(today.getFullYear() + 1);
+        }
 
-      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        //const newTimeRemaining = halloweenDate - today;
+        // ** TEST **
+        const newTimeRemaining = halloweenDate - today;
+        setTimeRemaining(newTimeRemaining);
 
-      setCountdown({ days, hours, minutes, seconds });
+        const days = Math.floor(newTimeRemaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((newTimeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((newTimeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((newTimeRemaining % (1000 * 60)) / 1000);
 
-      if (timeRemaining <= 0) {
-        clearInterval(interval);
-      }
-    }, 1000);
+        setCountdown({ days, hours, minutes, seconds });
+        setIsLoading(false);
+
+        if (newTimeRemaining <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <>
+    <section className='countdown-section'>
+      {isLoading ? (
+        <div className='loading'>
+          I am calculating the time left ... 
+        </div>
+      ) : timeRemaining <= 0 ? (
+        // Elements to add if it is actually Halloween
+        <div className='halloween-day'>
+          <p>🎃<b> Good news!</b> The time is finally here.</p>
+          <div className='halloween-buttons'>
+          <button>👻 Trick</button>
+          <button>🍬 Treat</button>
+          </div>
+        </div>
+      ) : (
+        // Elements to render when the condition is false
+          showMessage && (
+            <div className='not-halloween'>
+              <p>🚀 Do you want to get a notification?</p>
+              <div className='halloween-buttons'>
+                <button>🔔 Notify</button>
+                <button onClick={handleDimiss}><b>X</b> Dimiss</button>
+              </div>
+            </div>
+            )
+             )}
+             
         <FullMoon/>
         <Ghosts/>       
-        <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill'></Image>
+        <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
         
         <div className='halloween-box'>
         <h1 className='gradient-text'>Halloween Countdown</h1>
@@ -64,7 +102,7 @@ const Countdown = () => {
             </div>
         </div>
         </div>
-    </>
+    </section>
   );
 };
 

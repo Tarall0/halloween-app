@@ -17,7 +17,6 @@ body{
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Griffy', serif;
-  overflow-x: hidden;
 }
 
 .halloween-box{
@@ -195,4 +194,98 @@ border-radius: 100%;
   position: fixed;
   bottom: 0;
   right: 0;
+}
+
+.not-halloween{
+  background-color: var(--altDark);
+  max-width: 320px;
+  width: 90%;
+  padding: 1em;
+  border-radius: .5em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 420;
+  top: 10px;
+  font-family: "Roboto", sans-serif;
+  animation: fadeFromUp .5s linear;
+
+}
+
+@keyframes fadeFromUp {
+  0%{
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+
+  100%{
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  
+}
+
+.not-halloween p{
+  text-align: center;
+}
+
+.halloween-day{
+  background-color: var(--altDark);
+  max-width: 320px;
+  width: 90%;
+  padding: 1em;
+  border-radius: .5em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 420;
+  bottom: 10px;
+  animation: fadeFromBottom .5s linear;
+  font-family: "Roboto", sans-serif;
+}
+
+@keyframes fadeFromBottom {
+  0%{
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+
+  100%{
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  
+}
+
+.halloween-buttons{
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1em;
+  width: 80%;
+  margin: 1em auto;
+}
+
+.halloween-day p{
+  text-align: center;
+}
+
+.halloween-buttons button{
+  appearance: none;
+  border: none;
+  background-color: var(--green);
+  color: var(--foreground);
+  padding: .75em;
+  border-radius: .5em;
+  transition: all 200ms ease;
+}
+
+.halloween-buttons button:hover{
+  cursor: pointer;
+  background-color: var(--lightGreen);
+}
+
+.loading{
+  position: absolute;
+  width: 100%;
+  text-align: center;
 }
