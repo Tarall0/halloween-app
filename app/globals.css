@@ -77,7 +77,7 @@ body{
 }
 
 .moon-wrapper{
-  position: absolute;
+  position: fixed;
   opacity: .6;
   top: 5%;
 }
