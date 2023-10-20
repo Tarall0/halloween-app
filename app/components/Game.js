@@ -63,7 +63,6 @@ export default function Game() {
         { question: questions[currentQuestionIndex], answer: characterClass },
       ]);
 
-      // You can add logic here to process the user's response
 
       // Move on to the next question or end the conversation
       if (currentQuestionIndex === questions.length - 1) {
