@@ -315,3 +315,87 @@ border-radius: 100%;
   font-family: "Roboto", sans-serif;
   height: 3em;
 }
+
+
+.game-box{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 420;
+  background-color: var(--altDark);
+  width: 90%;
+  max-width: 600px;
+  min-height: 80%;
+  font-family: "Roboto", sans-serif;
+}
+
+.game-menu{
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 1.5em;
+  margin: 1em auto;
+  max-width: 320px;
+  
+}
+
+.game-menu button{
+  background-color: var(--green);
+  padding: 1em;
+  appearance: none;
+  border: none;
+  color: white;
+  border-radius: .5em;
+  box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.05);
+  
+}
+
+.game-box .chat-history {
+  padding: 1em;
+  background-color: rgb(0, 0, 0, 0.35);
+  margin: 1em;
+  border-radius: .5em;
+  
+}
+
+.chat-history .chat-bot {
+  background-color: var(--altDark);
+  max-width: 60%;
+  padding: 1em;
+  line-height: 1.5;
+  margin: 1em;
+}
+
+.chat-history .chat-user {
+  background-color: var(--green);
+  max-width: 60%;
+  padding: 1em;
+  line-height: 1.5;
+  margin: 1em;
+  margin-left: 30%;
+}
+
+
+.game-box .question{
+  padding: 1em;
+  background-color: rgb(0, 0, 0, 0.35);
+  margin: 1em;
+  border-radius: .5em;
+}
+
+.user-response {
+  display: grid;
+  grid-template-columns: auto auto;
+  max-width: 300px;
+  margin: 1em auto;
+  gap: 1em;
+}
+
+.user-response .user-input{
+  appearance: none;
+  border: none;
+  padding: 1em;
+  border-radius: .5em;
+  background-color: var(--background);
+  color: var(--foreground);
+}
