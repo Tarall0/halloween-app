@@ -75,14 +75,12 @@ export default function Game() {
 
   return (
     <>
-
-<div className="game-menu">
+    <div className="game-box">
+    <div className="game-menu">
         <button>Start</button>
         <button>Info</button>
         <button>Exit</button>
       </div>
-    <div className="game-box">
-
         <div className="question">
         <span className="typing-effect">{displayText}</span>
         </div>
