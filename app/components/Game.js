@@ -17,7 +17,7 @@ export default function Game() {
     if (index === 1) {
       return `What a nice name, ${username || "Player"}! What class would you like to choose?`;
     } else if (index === 2) {
-      return `I understand you chose ${characterClass}. Now let's start our adventure!`
+      return `I understand you chose to be a ${characterClass}. Now let's start our adventure!`
     } else if (index === 4) {
       return `You wake up unconscious in a room with some weapons. What do you choose, ${username || "Player"}?`;
     } else if(index === 5) {
