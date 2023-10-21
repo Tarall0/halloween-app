@@ -7,6 +7,7 @@
   --lightGreen: #008170;
   --foreground: #f0f0f0;
   --darkedFg: #a3a1a1;
+  --halloweenPurple: #7f0081;
 }
 
 *{
@@ -330,12 +331,15 @@ border-radius: 100%;
   max-width: 600px;
   margin: 1em auto;
   font-family: "Roboto", sans-serif;
+  padding: 1em;
+  border-radius: 1em;
 }
 
 .game-head{
-
   background-color: var(--altDark);
   width: 100%;
+  margin: 2em auto;
+  border-bottom: 1px solid var(--green)
   
 }
 
@@ -394,11 +398,9 @@ border-radius: 100%;
 }
 
 .user-response {
-  display: grid;
-  grid-template-columns: auto auto;
-  max-width: 300px;
+  width: 90%;
+  max-width: 420px;
   margin: 1em auto;
-  gap: 1em;
 }
 
 .user-response .user-input{
@@ -408,4 +410,45 @@ border-radius: 100%;
   border-radius: .5em;
   background-color: var(--background);
   color: var(--foreground);
+  width: calc(100% - 2em);
+}
+
+.questions-buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1.5em;
+  max-width: 250px;
+  margin: auto;
+}
+
+.questions-buttons button{
+  appearance: none;
+  border: none;
+  background-color: var(--halloweenPurple);
+  color: var(--foreground);
+  text-shadow: 1px 1px solid var(--background);
+  padding: 1em;
+  border-radius: .5em;
+  transition: all 200ms ease;
+}
+
+.questions-buttons button:hover, .questions-buttons button+.selected{
+  background-color: var(--lightGreen) !important;
+  color: var(--foreground);
+}
+
+.submit-button{
+  width: 100%;
+  margin: 1em auto;
+  text-align: center;
+}
+
+.submit-button button {
+  background-color: var(--green);
+  border-radius: .5em;
+  appearance: none;
+  border: none;
+  padding: 1em 2em;
+  color: var(--foreground);
+  width: 250px;
 }
