@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FullMoon from './FullMoon';
 import Ghosts from './Ghosts';
 import Pumpkin from './Pumpkin';
@@ -18,10 +18,10 @@ const Countdown = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [showMessage, setShowMessage] = useState(true);
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [showUnnotified, setShowUnnotified] = useState(false);
-    const [permission, setPermission] = useState(false);
     const [game, setGame] = useState(false);
+    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+    const [manualStop, setManualStop] = useState(false);
+    const audioRef = useRef(null);
 
     const handleDimiss = () => {
       setShowMessage(false);
@@ -30,6 +30,25 @@ const Countdown = () => {
     const playGame = () => {
       setGame(true);
       setShowMessage(false);
+      setIsMusicPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.play();
+      }
+    }
+  
+    const stopMusic = () => {
+      setIsMusicPlaying(false);
+      setManualStop(true);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+
+    const playMusic = () => {
+      setIsMusicPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.play();
+      }
     }
 
     // Calculate days hours minutes and seconds until Halloween
@@ -90,7 +109,16 @@ const Countdown = () => {
         )}
 
         {game ? (
-          <Game/>
+          <>
+            <Game />
+            {isMusicPlaying ? (
+              <button onClick={stopMusic} className='stop-music'> Stop Music</button>
+            ) : (
+              manualStop ? (
+                <button onClick={playMusic} className='stop-music'> Play Music</button>
+              ) : null
+            )}
+          </>
         ) : (
           <div className='halloween-box'>
             <h1 className='gradient-text'>Halloween Countdown</h1>
@@ -114,6 +142,16 @@ const Countdown = () => {
         <FullMoon/>
         <Ghosts/>       
         <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
+
+        <audio ref={audioRef} autoPlay loop style={{ display: isMusicPlaying ? 'block' : 'none' }}>
+          <source src="https://tarallotest.it/halloween-audio.mp3" type="audio/mpeg" />
+        </audio>
+
+        {
+        // https://www.youtube.com/watch?v=_fVRA6XnvYc Haunted House 🎃 Lofi Hip Hop Mix 🎃 No Copyright Halloween Lofi Beats
+        // © Music music by @lofigeek
+        // Instagram profile:https://www.instagram.com/lofigeek 
+        }
         
         
     </section>

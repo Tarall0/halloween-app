@@ -452,3 +452,17 @@ border-radius: 100%;
   color: var(--foreground);
   width: 250px;
 }
+
+.stop-music{
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 1em 2em;
+  background-color: var(--halloweenPurple);
+  z-index: 430;
+  appearance: none;
+  border: none;
+  border-radius: .5em;
+  color: var(--foreground);
+  box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.25);
+}
