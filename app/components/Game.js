@@ -4,7 +4,7 @@ export default function Game() {
   const [userLife, setUserLife] = useState(3);
   const [username, setUsername] = useState("");
   const [characterClass, setCharacterClass] = useState("");
-  const [weapon, setWeapon] = useState("");
+  const [weapon, setWeapon] = useState("No weapon");
   const [inputText, setInputText] = useState("");
   const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -38,8 +38,10 @@ export default function Game() {
       return `You decided to ${userChoice}. You find some weapons. Which one do you chose?`;
     }else if(index === 8) {
       return `You chose a ${weapon}. That will help us during our adventure.`;
-    } else if(index === 10) {
-      return `Oh no! ${username} you encounter a fearsome zombie. What will you do?`;
+    } else if(index === 12) {
+      return `Oh no! ${username} you encounter a fearsome 🧟 zombie! What will you do?`;
+    } else if(index === 13) {
+      return `Hurry up ${username} and do something before we get attacked!`;
     } else {
       return questions[index];
     }
@@ -55,8 +57,11 @@ export default function Game() {
     "You wake up unconscious in a dark room. What do you do?",
     "You choose weapon",
     "Nice weapon!",
-    "You find the exit ",
-    "First enemy"
+    "You find the exit and are out of the building.",
+    "You see ahead of you destroyed buildings, everything looks abandoned. You see on the horizon the sunset. It is almost evening.",
+    "Wait a moment--do you smell that strange smell? Where is it coming from?",
+    "first enemy",
+    "first action fight",
   ];
 
 
@@ -94,7 +99,7 @@ export default function Game() {
     if (currentQuestionIndex === 3) {
       setCharacterClass(event.target.value);
     }
-    if (currentQuestionIndex === 6) {
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 13) {
       setUserChoice(event.target.value);
     } 
     if (currentQuestionIndex === 7) {
@@ -106,15 +111,14 @@ export default function Game() {
   const handleChoiceClick = (choice, index) => {
     setSelectedChoiceIndex(index);
 
-  
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 10) {
-      // 
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 13) {
+      //
       setUserChoice(choice);
       
     } else if (currentQuestionIndex === 7) {
       // If this is the weapon selection
       setWeapon(choice);
-    } else {
+    } else { 
       // Else for now it will be the character class selection
       setCharacterClass(choice);
      }
@@ -168,7 +172,7 @@ export default function Game() {
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
         ]);
-        setCurrentQuestionIndex(9); // Move to next interaction without letting the user choose a weapon
+        setCurrentQuestionIndex(9); // Move to index 9
       }
     } else if (currentQuestionIndex === 7 && weapon) {
       // Handle weapon selection
@@ -191,12 +195,32 @@ export default function Game() {
         { question: currentQuestion },
       ]);
       setCurrentQuestionIndex(10);
-      setChoices(["🏃 Escape", "🤺 Fight"]);
     } else if (currentQuestionIndex === 10) {
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion },
       ]);
+      setCurrentQuestionIndex(11);
+    } else if (currentQuestionIndex === 11) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion },
+      ]);
+      setCurrentQuestionIndex(12);
+      setChoices(["🏃 Escape", "🤺 Fight"]);
+    } else if (currentQuestionIndex === 12) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice },
+      ]);
+      if(userChoice === "🤺 Fight") {
+        setCurrentQuestionIndex(13)
+        setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
+        setChatHistory([
+          ...chatHistory,
+          { question: currentQuestion, answer: userChoice },
+        ]);
+      }
     }
   };
   
@@ -220,7 +244,7 @@ export default function Game() {
             <span className="typing-effect">{displayText}</span>
           </div>
           <div className="user-response">
-            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 ? (
+            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 || currentQuestionIndex === 11 || currentQuestionIndex === 12 || currentQuestionIndex === 13? (
               <div className="questions-buttons">
                 {choices.map((choice, index) => (
                   <button
