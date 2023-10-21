@@ -316,18 +316,27 @@ border-radius: 100%;
   height: 3em;
 }
 
+.game{
+  width: 100vw;
+  min-height: 100vh;
+  position: absolute;
+  z-index: 420;
+}
+
 
 .game-box{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 420;
   background-color: var(--altDark);
   width: 90%;
   max-width: 600px;
-  min-height: 80%;
+  margin: 1em auto;
   font-family: "Roboto", sans-serif;
+}
+
+.game-head{
+
+  background-color: var(--altDark);
+  width: 100%;
+  
 }
 
 .game-menu{
@@ -355,6 +364,7 @@ border-radius: 100%;
   background-color: rgb(0, 0, 0, 0.35);
   margin: 1em;
   border-radius: .5em;
+  overflow-y: auto;
   
 }
 
@@ -376,7 +386,7 @@ border-radius: 100%;
 }
 
 
-.game-box .question{
+.question{
   padding: 1em;
   background-color: rgb(0, 0, 0, 0.35);
   margin: 1em;

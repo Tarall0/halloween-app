@@ -53,16 +53,21 @@ export default function Game() {
   const handleNextQuestion = () => {
     if (currentQuestionIndex === 0 && username) {
       setChatHistory([
-        ...chatHistory,
         { question: questions[currentQuestionIndex], answer: username },
+        ...chatHistory,
       ]);
       setCurrentQuestionIndex(1);
     } else if (currentQuestionIndex === 1 && characterClass) {
       setChatHistory([
-        ...chatHistory,
         { question: questions[currentQuestionIndex], answer: characterClass },
+        ...chatHistory,
       ]);
-
+      setCurrentQuestionIndex(2);
+    } else if (currentQuestionIndex === 2 ) {
+        setChatHistory([
+          { question: questions[currentQuestionIndex], answer: username },
+          ...chatHistory,
+        ]);
 
       // Move on to the next question or end the conversation
       if (currentQuestionIndex === questions.length - 1) {
@@ -74,8 +79,10 @@ export default function Game() {
   };
 
   return (
-    <>
+    <div className="game">
+    
     <div className="game-box">
+    <div className="game-head">
     <div className="game-menu">
         <button>Start</button>
         <button>Info</button>
@@ -98,9 +105,11 @@ export default function Game() {
           Next
         </button>
         </div>
+    </div>
       
       <div className="game-textarea">
        <div className="chat-history">
+        <h3>Chatlog</h3>
        {chatHistory.map((chat, index) => (
           <div key={index}>
             <div className="chat-bot">{chat.question}</div>
@@ -111,6 +120,6 @@ export default function Game() {
       </div>
     </div>
     
-    </>
+    </div>
   );
 }
