@@ -1,6 +1,7 @@
 import  { useState, useEffect } from "react";
 
 export default function Game() {
+  const [userLife, setUserLife] = useState(3);
   const [username, setUsername] = useState("");
   const [characterClass, setCharacterClass] = useState("");
   const [weapon, setWeapon] = useState("");
@@ -12,6 +13,7 @@ export default function Game() {
   const [choices, setChoices] = useState([]);
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
   const [userChoice, setUserChoice] = useState("");
+  const hearts = Array(userLife).fill('❤️');
 
   const goals = [
     "to destroy all the zobies on Earth",
@@ -31,11 +33,13 @@ export default function Game() {
     } else if (index === 4) {
       return `I understand you chose to be a ${characterClass}. Now let's start our adventure!`
     } else if (index === 6) {
-      return `You wake up unconscious in a room with dark room. What do you do, ${username || "Player"}?`;
+      return `You suddenly wake up confused in a dark room. What do you do, ${username || "Player"}?`;
     } else if (index === 7) {
       return `You decided to ${userChoice}. You find some weapons. Which one do you chose?`;
     }else if(index === 8) {
       return `You chose a ${weapon}. That will help us during our adventure.`;
+    } else if(index === 10) {
+      return `Oh no! ${username} you encounter a fearsome zombie. What will you do?`;
     } else {
       return questions[index];
     }
@@ -44,14 +48,15 @@ export default function Game() {
   const questions = [
     "Welcome to this mini game! What's your username?",
     "Your goal is this",
-    "You don't remember that much. As far as we know, the Earth has been destoryed -- Or almost destroyed.",
+    "You don't remember that much. As far as we know, the Earth has been destoryed — Or almost destroyed.",
     "What class would you like to choose?",
     "I understand. Now let's start our adventure!",
     "...",
     "You wake up unconscious in a dark room. What do you do?",
     "You choose weapon",
     "Nice weapon!",
-    "You find the exit "
+    "You find the exit ",
+    "First enemy"
   ];
 
 
@@ -102,19 +107,17 @@ export default function Game() {
     setSelectedChoiceIndex(index);
 
   
-    if (currentQuestionIndex === 6) {
-      // If this is the weapon selection
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 10) {
+      // 
       setUserChoice(choice);
-      handleNextQuestion();
+      
     } else if (currentQuestionIndex === 7) {
       // If this is the weapon selection
       setWeapon(choice);
-      handleNextQuestion();
     } else {
       // Else for now it will be the character class selection
       setCharacterClass(choice);
-      handleNextQuestion();
-    }
+     }
   };
 
   
@@ -149,15 +152,14 @@ export default function Game() {
       setCurrentQuestionIndex(6);
       setChoices(["keep exploring", "follow the light and exit the room"]);
     } else if (currentQuestionIndex === 6) {
+      setChoices([]);
       setChatHistory([...chatHistory, { question: currentQuestion }]);
-  
       if (userChoice === "keep exploring") {
         // User chose to keep exploring
         setChatHistory([
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
         ]);
-  
         setCurrentQuestionIndex(7);
         setChoices(["🧪 Potion", "🔫 Gun", "🗡️ Sword", "💎 Rock"]);
       } else if (userChoice === "follow the light and exit the room") {
@@ -166,8 +168,7 @@ export default function Game() {
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
         ]);
-  
-        setCurrentQuestionIndex(9); // Adjust as needed for the next question or scenario
+        setCurrentQuestionIndex(9); // Move to next interaction without letting the user choose a weapon
       }
     } else if (currentQuestionIndex === 7 && weapon) {
       // Handle weapon selection
@@ -175,14 +176,27 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion, answer: weapon },
       ]);
-      setCurrentQuestionIndex(8); // Move on to the next question after selecting a weapon
+      setCurrentQuestionIndex(8);
+      setChoices([]);
     } else if (currentQuestionIndex === 8) {
-      // Handle the next question or scenario after selecting a weapon
+      // Handle the next question after selecting a weapon
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion },
       ]);
-      setCurrentQuestionIndex(9); // Move to the next question or scenario
+      setCurrentQuestionIndex(9);
+    } else if (currentQuestionIndex === 9) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion },
+      ]);
+      setCurrentQuestionIndex(10);
+      setChoices(["🏃 Escape", "🤺 Fight"]);
+    } else if (currentQuestionIndex === 10) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion },
+      ]);
     }
   };
   
@@ -191,12 +205,22 @@ export default function Game() {
     <div className="game">
       <div className="game-box">
         <div className="game-head">
-          <h3>Mini Game</h3>
+          {characterClass ? (<div className="user-info">
+            <p className="user-basic"><b>{username}</b> — {characterClass}
+            </p>
+            <p className="user-life">
+              {hearts.map((heart, index) => (
+                <span key={index} className="heart-emoji">
+                  {heart}
+                </span>
+              ))}
+            </p>
+          </div>) : ("")}
           <div className="question">
             <span className="typing-effect">{displayText}</span>
           </div>
           <div className="user-response">
-            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 ? (
+            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 ? (
               <div className="questions-buttons">
                 {choices.map((choice, index) => (
                   <button
@@ -232,12 +256,12 @@ export default function Game() {
             <h3>💬 Chatlog</h3>
             {chatHistory.slice().reverse().map((chat, index) => (
               <div key={index}>
-                <div className="chat-bot">{chat.question}</div>
                 {chat.answer ? (
                   <div className="chat-user">{chat.answer}</div>
                 ) : (
                   ""
                 )}
+                <div className="chat-bot">{chat.question}</div>
               </div>
             ))}
           </div>
