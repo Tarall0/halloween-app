@@ -22,6 +22,7 @@ export default function Game() {
   const [userXP, setUserXP] = useState(0);
   const [userLevel, setUserLevel] = useState(1);
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
+  const [randomAnimal, setRandomAnimal] = useState("");
 
   const gainXP = (xpAmount) => {
     setUserXP(userXP + xpAmount);
@@ -31,6 +32,7 @@ export default function Game() {
       setUserLevel(userLevel + 1);
       setUserXP(userXP - maxXPForNextLevel);
       setMaxXPForNextLevel(maxXPForNextLevel * 1.5); // Adjust progression
+      setUserLife(userLife + 2);
     }
   };
   
@@ -41,6 +43,14 @@ export default function Game() {
     "👹 WANDERING SPIRIT",
     "🐺 EVIL WEREWOLF",
   ]
+
+  const animal = [
+    "🦉 Owl",
+    "🐁 Mouse",
+    "🐍 Snake",
+    "🐿️ Chipmunk"
+  ]
+
 
 
   const goals = [
@@ -55,6 +65,7 @@ export default function Game() {
   ]
 
   const goal = goals[Math.floor(Math.random() * goals.length)];
+  
   
   
 
@@ -102,6 +113,10 @@ export default function Game() {
       return `You notice that in the northeast direction you can see smoke, as if someone has lit a fire. You decide to head to that area.`;
     }else if(index === 26) { // while walking to second scenario
       return `What you see around, ${username}, is horrible. All the buildings around are half-destroyed, and there is not a (living) soul around. The sun is almost set completely.`;
+    }else if(index === 28) { // User easter egg
+      return `It seems to be a ${randomAnimal}. Maybe it is injured. What do you decide to do?`;
+    }else if(index === 29) { // User easter egg
+      return `You chose to care for the animal. What a nice gesture. ${randomAnimal} stands up and watches you. Suddenly it is enveloped in a magnificent light, takes the form of a spirit.`;
     }else {
       return questions[index];
     }
@@ -135,8 +150,11 @@ export default function Game() {
     "If enemy beaten",
     "if escaped",
     "out of the fight, going to second scenario ",
-    "If fight ended",
-    "Going to second scenario",
+    "As you walk, what looks like an injured animal crouched by the side of the road catches your attention.",
+    "Random animal, user choice",
+    "If user chose to help the animal", // to implement
+    "Power gained because they helped", // to implement
+    "If the user chose to ignore" // to implement
   ];
 
   const armorSpecials = [
@@ -174,7 +192,7 @@ export default function Game() {
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
-    if (currentQuestionIndex === 0 || currentQuestionIndex === 1 ||currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 5) {
+    if (currentQuestionIndex === 0 ) {
       setUsername(event.target.value);
     }
     
@@ -193,7 +211,7 @@ export default function Game() {
   const handleChoiceClick = (choice, index) => {
     setSelectedChoiceIndex(index);
 
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 12) {
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28) {
       //
       setUserChoice(choice);
       
@@ -292,6 +310,7 @@ export default function Game() {
         setChoices(["🧪 Potion", "🔫 Gun", "🗡️ Sword", "💎 Rock"]);
       } else if (userChoice === "follow the light and exit the room") {
         // User chose to follow the light and exit the room
+        gainXP(5);
         setChatHistory([
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
@@ -361,6 +380,7 @@ export default function Game() {
           { question: currentQuestion, answer: userChoice },
         ]);
         if (userChoice === "🏃 Escape") {
+          gainXP(5);
           setCurrentQuestionIndex(24);
           setChoices([]); // Clear choices when the user escapes
         } else if (userChoice === "🤺 Fight") {
@@ -369,6 +389,7 @@ export default function Game() {
           setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
         }
       } else if (currentQuestionIndex === 13) {
+        gainXP(5);
         setChatHistory([
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
@@ -407,6 +428,7 @@ export default function Game() {
     setCurrentQuestionIndex(17);
     setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
     } else if (currentQuestionIndex === 17) {
+      gainXP(5);
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion,  answer: userChoice},
@@ -440,6 +462,7 @@ export default function Game() {
       setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
       setCurrentQuestionIndex(20); 
     } else if (currentQuestionIndex === 20) {
+      gainXP(5);
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion,  answer: userChoice},
@@ -496,8 +519,36 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion,},
       ]);
+      setRandomAnimal(animal[Math.floor(Math.random() * animal.length)]);
       setCurrentQuestionIndex(27);
-    } 
+    } else if (currentQuestionIndex === 27){
+      // Wild animal appear 
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion,},
+      ]);
+      setCurrentQuestionIndex(28);
+      setChoices(["try to cure", "leave it there and ignore"]);
+    } else if (currentQuestionIndex === 28){
+      gainXP(5);
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice},
+      ]);
+      if(userChoice === "try to cure") {
+        gainXP(10);
+        setCurrentQuestionIndex(29);
+      } else if (userChoice === "leave it there and ignore"){
+        gainXP(5);
+        setCurrentQuestionIndex(31);
+      } else if (currentQuestionIndex === 29){
+        setChatHistory([
+          ...chatHistory,
+          { question: currentQuestion,},
+        ]);
+        setCurrentQuestionIndex(30);
+      }
+    }
   };
   
 
@@ -525,7 +576,7 @@ export default function Game() {
             <span className="typing-effect">{displayText}</span>
           </div>
           <div className="user-response">
-            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 || currentQuestionIndex === 11 || currentQuestionIndex === 12 || currentQuestionIndex === 13 || currentQuestionIndex === 14 || currentQuestionIndex === 15 || currentQuestionIndex === 16 || currentQuestionIndex === 17 || currentQuestionIndex === 18 || currentQuestionIndex === 19 || currentQuestionIndex === 20 || currentQuestionIndex === 21 || currentQuestionIndex === 22 || currentQuestionIndex === 23 || currentQuestionIndex === 24 || currentQuestionIndex === 25? (
+            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 || currentQuestionIndex === 11 || currentQuestionIndex === 12 || currentQuestionIndex === 13 || currentQuestionIndex === 14 || currentQuestionIndex === 15 || currentQuestionIndex === 16 || currentQuestionIndex === 17 || currentQuestionIndex === 18 || currentQuestionIndex === 19 || currentQuestionIndex === 20 || currentQuestionIndex === 21 || currentQuestionIndex === 22 || currentQuestionIndex === 23 || currentQuestionIndex === 24 || currentQuestionIndex === 25 || currentQuestionIndex === 26 || currentQuestionIndex === 27 || currentQuestionIndex === 28? (
               <div className="questions-buttons">
                 {choices.map((choice, index) => (
                   <button
