@@ -98,7 +98,7 @@ export default function Game() {
     }else if(index === 8) {
       return `You chose a ${weapon}. ${weaponDesc}.`;
     } else if(index === 12) {
-      return `Oh no! ${username} you encounter a ${enemy} (lvl ${enemyLife % 2}, ${enemyLife} life points)! What will you do?`;
+      return `Oh no! ${username} you encounter a ${enemy} (lvl ${(enemyLife % 2) + 1}, ${enemyLife} life points)! What will you do?`;
     } else if(index === 13) {
       return `Hurry up ${username} and do something before we get attacked!`;
     } else if(index === 14) {
@@ -131,7 +131,7 @@ export default function Game() {
       return `It seems to be a ${randomAnimal}. Maybe it is injured. What do you decide to do?`;
     }else if(index === 29) { // User easter egg
       return `You chose to care for the animal. What a nice gesture. ${randomAnimal} stands up and watches you. Suddenly it is enveloped in a magnificent light, takes the form of a spirit.`;
-    }else if(index === 31) { // User easter egg
+    }else if(index === 31) { // User blessing
       return `${blessing}`;
     }else {
       return questions[index];
@@ -171,7 +171,7 @@ export default function Game() {
     "If user chose to help the animal", 
     "Because you helped the poor animal. Here is a blessing for you, choose.", 
     "Your gesture has been blessed by gods",
-    "If the user chose to ignore" // to implement
+    "I understand there are more important things at the moment and that you have decided to go ahead..." // to implement
   ];
 
   const armorSpecials = [
@@ -591,7 +591,14 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion, answer: userChoice},
       ]);
-      setCurrentQuestionIndex(32);
+      setCurrentQuestionIndex(33);
+    } else if (currentQuestionIndex === 32) {
+      gainXP(5);
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(33);
     }
   };
   
