@@ -474,6 +474,19 @@ border-radius: 100%;
   color: var(--foreground);
   box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.25);
 }
+.button-home{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 1em 2em;
+  background-color: var(--halloweenPurple);
+  z-index: 430;
+  appearance: none;
+  border: none;
+  border-radius: .5em;
+  color: var(--foreground);
+  box-shadow: 0px 3px 6px rgb(0, 0, 0, 0.25);
+}
 
 .user-info{
   display: flex;
@@ -491,3 +504,11 @@ border-radius: 100%;
   border-radius: .5em;
 }
 
+.user-life{
+  background-color: rgb(0, 0, 0, 0.25);
+}
+
+.user-life>span{
+  display: inline-block;
+  margin: 5px;
+}

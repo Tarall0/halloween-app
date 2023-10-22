@@ -73,10 +73,12 @@ export default function Game() {
     }else if(index === 21) {
       return `Great! You inflicted ${attack} damage.`;
     }else if(index === 22) { // If user is dead
-      return `Oh no ${username}. ${enemy} defeated you.`;
+      return `Oh no ${username}. ${enemy} is assailed by anger. It suddenly attacks you. You lose consciousness. ${enemy} defeated you.`;
     }else if(index === 23) { // If user defeat enemy
       return `Well done ${username}! ${enemy} has been defeated.`;
-    }else if(index === 24) { // Going out the fight 
+    }else if(index === 24) { // if escaped
+      return `You managed to escape this time...`;
+    }else if(index === 25) { // Going out the fight 
       return `You notice that in the northeast direction you can see smoke, as if someone has lit a fire. You decide to head to that area.`;
     }else {
       return questions[index];
@@ -165,7 +167,7 @@ export default function Game() {
       //
       setUserChoice(choice);
       
-    } else if (currentQuestionIndex === 13 || currentQuestionIndex === 17) {
+    } else if (currentQuestionIndex === 13 || currentQuestionIndex === 17  || currentQuestionIndex === 20) {
       setUserChoice(choice);
       if (choice === "Kick") {
         // Define damage for the Kick action
@@ -186,8 +188,9 @@ export default function Game() {
         
         setEnemyLife(enemyLife - weaponDamage);
       } else if (choice === "Escape") {
-        // Handle the user's escape action (if needed)
-        // You can add escape logic here
+        setChoices([]);
+        setCurrentQuestionIndex(24);
+        
       }
 
     }
@@ -297,7 +300,8 @@ export default function Game() {
       if(userChoice === "🤺 Fight") {
         setCurrentQuestionIndex(13);
       } else if (userChoice === "🏃 Escape") {
-        setCurrentQuestionIndex(23);
+        setCurrentQuestionIndex(24);
+        setChoices([]);
       }
       setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
     } else if (currentQuestionIndex === 13) {
@@ -400,8 +404,9 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion,},
       ]);
-      setCurrentQuestionIndex(24);
+      setCurrentQuestionIndex(25);
     } else if (currentQuestionIndex === 24){
+      setChoices([]);
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion,},
@@ -454,8 +459,10 @@ export default function Game() {
               />
             )}
             <div className="submit-button">
-              <button onClick={handleNextQuestion} disabled={isTyping || !inputText}>
-                {isTyping ? "Writing... " : "Next"}
+              <button 
+                onClick={handleNextQuestion} 
+                disabled={isTyping || !inputText || currentQuestionIndex === 22}>
+                  {isTyping ? "Writing... " : "Next"}
               </button>
             </div>
           </div>

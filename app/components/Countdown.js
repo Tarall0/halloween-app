@@ -35,6 +35,14 @@ const Countdown = () => {
         audioRef.current.play();
       }
     }
+
+    const returnHome = () => {
+      setGame(false);
+      setIsMusicPlaying(false);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    }
   
     const stopMusic = () => {
       setIsMusicPlaying(false);
@@ -110,6 +118,7 @@ const Countdown = () => {
 
         {game ? (
           <>
+          <button onClick={returnHome} className='button-home'> Exit Game</button>
             <Game />
             {isMusicPlaying ? (
               <button onClick={stopMusic} className='stop-music'> 🔇 Stop Music</button>
