@@ -5,6 +5,7 @@ export default function Game() {
   const [username, setUsername] = useState("");
   const [characterClass, setCharacterClass] = useState("");
   const [weapon, setWeapon] = useState("No weapon");
+  const [weaponDesc, setWeaponDesc] = useState("");
   const [inputText, setInputText] = useState("");
   const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -18,6 +19,21 @@ export default function Game() {
   const [enemyLife, setEnemyLife] = useState(10);
   const [attack, setAttack] = useState("1"); // Minimum attack value (for no weapon cases) set to 1
   const [enemyAttack, setEnemyAttack] = useState("");
+  const [userXP, setUserXP] = useState(0);
+  const [userLevel, setUserLevel] = useState(1);
+  const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
+
+  const gainXP = (xpAmount) => {
+    setUserXP(userXP + xpAmount);
+  
+    if (userXP >= maxXPForNextLevel) {
+      // Level up
+      setUserLevel(userLevel + 1);
+      setUserXP(userXP - maxXPForNextLevel);
+      setMaxXPForNextLevel(maxXPForNextLevel * 1.5); // Adjust progression
+    }
+  };
+  
 
   const enemies = [
     "🧟 ZOMBIE",
@@ -28,7 +44,7 @@ export default function Game() {
 
 
   const goals = [
-    "to destroy all the zobies on Earth",
+    "to destroy all the zombies on Earth",
     "to revenge your family killed by humans",
     "to survive the apocalypse",
     "to return to the life before the apocalypse happened",
@@ -55,7 +71,7 @@ export default function Game() {
     } else if (index === 7) {
       return `You decided to ${userChoice}. You find some weapons. Which one do you chose?`;
     }else if(index === 8) {
-      return `You chose a ${weapon}. That will help us during our adventure.`;
+      return `You chose a ${weapon}. ${weaponDesc}.`;
     } else if(index === 12) {
       return `Oh no! ${username} you encounter a ${enemy} (${enemyLife} life points)! What will you do?`;
     } else if(index === 13) {
@@ -122,6 +138,13 @@ export default function Game() {
     "If fight ended",
     "Going to second scenario",
   ];
+
+  const armorSpecials = [
+    "This will let you gain two additional hearts",
+    "Nice sword! This will let you inflict a damage 2 - 12 to enemies",
+    "Perfect for distance shot! 7 damage to enemies",
+    "Mysterious rock",
+  ]
 
 
   
@@ -281,8 +304,26 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion, answer: weapon },
       ]);
+      gainXP(10);
       setCurrentQuestionIndex(8);
       setChoices([]);
+      switch(weapon){
+        case "🧪 Potion":
+          setUserLife(userLife + 2);
+          setWeaponDesc(armorSpecials[0]);
+          break;
+        case "🗡️ Sword":
+          setWeaponDesc(armorSpecials[1]);
+          break;
+        case "🔫 Gun":
+          setWeaponDesc(armorSpecials[2]);
+          break;
+        case "💎 Rock":
+          setWeaponDesc(armorSpecials[3]);
+          break;
+        default: 
+          break;
+      }
     } else if (currentQuestionIndex === 8) {
       // Handle the next question after selecting a weapon
       setChatHistory([
@@ -323,6 +364,7 @@ export default function Game() {
           setCurrentQuestionIndex(24);
           setChoices([]); // Clear choices when the user escapes
         } else if (userChoice === "🤺 Fight") {
+          gainXP(10);
           setCurrentQuestionIndex(13);
           setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
         }
@@ -344,13 +386,13 @@ export default function Game() {
     } else if (currentQuestionIndex === 14) {
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  },
+        { question: currentQuestion,  answer: userChoice},
       ]);
     setCurrentQuestionIndex(15); 
     } else if (currentQuestionIndex === 15) {
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  },
+        { question: currentQuestion,  answer: userChoice},
       ]);
       // Enemy Attack
       const randomAttack = Math.floor(Math.random() * 2 + 1);
@@ -415,7 +457,7 @@ export default function Game() {
     } else if (currentQuestionIndex === 21){
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,},
+        { question: currentQuestion, answer: userChoice},
       ]);
       if(userLife <= 0) {
         setCurrentQuestionIndex(22);
@@ -434,6 +476,7 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion,},
       ]);
+      gainXP(50);
       setCurrentQuestionIndex(25);
     } else if (currentQuestionIndex === 24){
       setChoices([]);
@@ -463,8 +506,13 @@ export default function Game() {
       <div className="game-box">
         <div className={`game-head`}>
           {characterClass && (userLife >= 0) ? (<div className="user-info">
-            <p className="user-basic"><b>{username}</b> — {characterClass}
-            </p>
+            <div className="user-basic"><b>{username}</b> — {characterClass} (Lvl {userLevel})
+            <div className="xp-bar">
+              <div className="xp-progress" style={{ width: `${(userXP / maxXPForNextLevel) * 100}%` }}>
+                {userXP} XP
+              </div>
+            </div>
+            </div>
             <p className="user-life">
               {hearts.map((heart, index) => (
                 <span key={index} className="heart-emoji">
