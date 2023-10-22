@@ -454,7 +454,7 @@ export default function Game() {
     <div className="game">
       <div className="game-box">
         <div className={`game-head`}>
-          {characterClass && (userLife <= 0) ? (<div className="user-info">
+          {characterClass && (userLife >= 0) ? (<div className="user-info">
             <p className="user-basic"><b>{username}</b> — {characterClass}
             </p>
             <p className="user-life">
