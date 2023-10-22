@@ -118,7 +118,7 @@ const Countdown = () => {
 
         {game ? (
           <>
-          <button onClick={returnHome} className='button-home'> Exit Game</button>
+          <button onClick={returnHome} className='button-home'> ❌ Exit Game</button>
             <Game />
             {isMusicPlaying ? (
               <button onClick={stopMusic} className='stop-music'> 🔇 Stop Music</button>

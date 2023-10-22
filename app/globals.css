@@ -466,7 +466,7 @@ border-radius: 100%;
   right: 10px;
   top: 10px;
   padding: 1em 2em;
-  background-color: var(--halloweenPurple);
+  background-color: var(--green);
   z-index: 430;
   appearance: none;
   border: none;
@@ -479,7 +479,7 @@ border-radius: 100%;
   left: 10px;
   top: 10px;
   padding: 1em 2em;
-  background-color: var(--halloweenPurple);
+  background-color: var(--green);
   z-index: 430;
   appearance: none;
   border: none;
@@ -494,26 +494,39 @@ border-radius: 100%;
   background-color: var(--altDark);
   border-radius: .5em;
   padding: .5em;
+  position: relative;
+}
+
+@media (max-width: 400px) {
+  .user-info{
+    display: grid;
+  }
   
 }
 
 .user-info .user-basic, .user-info .user-life{
-  
-  padding: .5em 1em;
   width: fit-content;
   border-radius: .5em;
+  margin: .25em auto;
 }
 
 .user-life{
   background-color: rgb(0, 0, 0, 0.25);
   max-height: fit-content;
   min-width: 50px;
+  padding: .5em 1em;
 }
 
 .user-life>span{
   display: inline-block;
   margin: 5px;
   font-size: x-small;
+}
+
+.user-info .lvl{
+  position: absolute;
+  top: 10px;
+  left: 5px;
 }
 
 .xp-bar {
@@ -534,4 +547,31 @@ border-radius: 100%;
   text-align: center;
   transition: width 0.5s;
   white-space: nowrap;
+}
+
+.confetti {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  border-radius: 50%;
+  animation: confetti-fall 2s ease-in-out;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(300px) rotate(360deg);
+  }
+}
+
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
 }

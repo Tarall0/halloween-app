@@ -17,26 +17,40 @@ export default function Game() {
   const hearts = Array(userLife).fill('❤️');
   const [enemy, setEnemy] = useState("");
   const [enemyLife, setEnemyLife] = useState(10);
-  const [attack, setAttack] = useState("1"); // Minimum attack value (for no weapon cases) set to 1
+  const [basicAttack, setBasicAttack] = useState(1);
+  const [attack, setAttack] = useState(); 
   const [enemyAttack, setEnemyAttack] = useState("");
   const [userXP, setUserXP] = useState(0);
   const [userLevel, setUserLevel] = useState(1);
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
+  const [blessing, setBlessing] = useState();
 
   const gainXP = (xpAmount) => {
-    setUserXP(userXP + xpAmount);
-  
-    if (userXP >= maxXPForNextLevel) {
-      // Level up
-      setUserLevel(userLevel + 1);
-      setUserXP(userXP - maxXPForNextLevel);
-      setMaxXPForNextLevel(maxXPForNextLevel * 1.5); // Adjust progression
-      setUserLife(userLife + 2);
+    let updatedXP = userXP + xpAmount;
+    
+    if (updatedXP >= maxXPForNextLevel) {
+      // Calculate the number of level ups based on the accumulated XP
+      const levelUps = Math.floor(updatedXP / maxXPForNextLevel);
+      
+      // Level up for each level achieved
+      for (let i = 0; i < levelUps; i++) {
+        // Level up
+        setUserLevel(userLevel + 1);
+        setUserLife(userLife + 2);
+        
+        // Subtract the XP required for the level up
+        updatedXP -= maxXPForNextLevel;
+        
+        // Increase the required XP for the next level
+        setMaxXPForNextLevel(maxXPForNextLevel * 1.5);
+      }
     }
+    
+    // Update the user's XP with the remaining XP
+    setUserXP(updatedXP);
   };
   
-
   const enemies = [
     "🧟 ZOMBIE",
     "🧌 CORRUPTED WITCH",
@@ -84,7 +98,7 @@ export default function Game() {
     }else if(index === 8) {
       return `You chose a ${weapon}. ${weaponDesc}.`;
     } else if(index === 12) {
-      return `Oh no! ${username} you encounter a ${enemy} (${enemyLife} life points)! What will you do?`;
+      return `Oh no! ${username} you encounter a ${enemy} (lvl ${enemyLife % 2}, ${enemyLife} life points)! What will you do?`;
     } else if(index === 13) {
       return `Hurry up ${username} and do something before we get attacked!`;
     } else if(index === 14) {
@@ -117,6 +131,8 @@ export default function Game() {
       return `It seems to be a ${randomAnimal}. Maybe it is injured. What do you decide to do?`;
     }else if(index === 29) { // User easter egg
       return `You chose to care for the animal. What a nice gesture. ${randomAnimal} stands up and watches you. Suddenly it is enveloped in a magnificent light, takes the form of a spirit.`;
+    }else if(index === 31) { // User easter egg
+      return `${blessing}`;
     }else {
       return questions[index];
     }
@@ -128,7 +144,7 @@ export default function Game() {
     "You don't remember that much. As far as we know, the Earth has been destoryed — Or almost destroyed.",
     "What class would you like to choose?",
     "I understand. Now let's start our adventure!",
-    "...",
+    "... ... ...",
     "You wake up unconscious in a dark room. What do you do?",
     "You choose weapon",
     "Nice weapon!",
@@ -152,15 +168,16 @@ export default function Game() {
     "out of the fight, going to second scenario ",
     "As you walk, what looks like an injured animal crouched by the side of the road catches your attention.",
     "Random animal, user choice",
-    "If user chose to help the animal", // to implement
-    "Power gained because they helped", // to implement
+    "If user chose to help the animal", 
+    "Because you helped the poor animal. Here is a blessing for you, choose.", 
+    "Your gesture has been blessed by gods",
     "If the user chose to ignore" // to implement
   ];
 
   const armorSpecials = [
     "This will let you gain two additional hearts",
-    "Nice sword! This will let you inflict a damage 2 - 12 to enemies",
-    "Perfect for distance shot! 7 damage to enemies",
+    "Nice sword! This will let you inflict additional 2 - 12 damage to enemies",
+    "Perfect for distance shot! Additional 7 damage to enemies",
     "Mysterious rock",
   ]
 
@@ -211,7 +228,7 @@ export default function Game() {
   const handleChoiceClick = (choice, index) => {
     setSelectedChoiceIndex(index);
 
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28) {
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28 || currentQuestionIndex === 29 || currentQuestionIndex === 30) {
       //
       setUserChoice(choice);
       
@@ -219,13 +236,13 @@ export default function Game() {
       setUserChoice(choice);
       if (choice === "Kick") {
         // Define damage for the Kick action
-        const kickDamage = 3;
+        const kickDamage = 3 + basicAttack;
         setEnemyLife(enemyLife - kickDamage);
         setAttack(kickDamage);
         
       } else if (choice === "Punch") {
         // Define damage for the Punch action
-        const punchDamage = 2;
+        const punchDamage = 2 + basicAttack;
         setEnemyLife(enemyLife - punchDamage);
         setAttack(punchDamage);
       } else if (choice === weapon) {
@@ -236,17 +253,17 @@ export default function Game() {
         // setEnemyLife(enemyLife - weaponDamage);
         switch(choice){
           case "🗡️ Sword":
-            const randSwordDamage = Math.floor(Math.random() * 10 + 2);
+            const randSwordDamage = (Math.floor(Math.random() * 10 + 2)) + basicAttack;
             setAttack(randSwordDamage);
             setEnemyLife(enemyLife - randSwordDamage);
             break;
           case "🔫 Gun":
-            const gunDamage = 7;
+            const gunDamage = 7 + basicAttack;
             setAttack(gunDamage);
             setEnemyLife(enemyLife - gunDamage);
             break;
           default: 
-            const weaponDamage = attack;
+            const weaponDamage = attack + basicAttack;
             setAttack(weaponDamage);
             setEnemyLife(enemyLife - weaponDamage);
             break;
@@ -269,6 +286,7 @@ export default function Game() {
   
   const handleNextQuestion = () => {
     const currentQuestion = getQuestionText(currentQuestionIndex);
+    setBasicAttack(userLevel);
   
     if (currentQuestionIndex === 0 && username) {
       setChatHistory([
@@ -540,14 +558,40 @@ export default function Game() {
         setCurrentQuestionIndex(29);
       } else if (userChoice === "leave it there and ignore"){
         gainXP(5);
-        setCurrentQuestionIndex(31);
-      } else if (currentQuestionIndex === 29){
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion,},
-        ]);
-        setCurrentQuestionIndex(30);
+        setCurrentQuestionIndex(32);
       }
+      setChoices([]);
+    } else if (currentQuestionIndex === 29){
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion,},
+      ]);
+      setChoices(["Blessing of Amar", "Blessing of Inoin"])
+      setCurrentQuestionIndex(30);
+    } else if (currentQuestionIndex === 30){
+      gainXP(10);
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice},
+      ]);
+
+      if(userChoice === "Blessing of Amar"){
+      setBlessing("Your gesture was blessed by the great god Amar. You gain 1 heart and a +1 basic attack");
+      setUserLife(userLife + 1);
+      setBasicAttack(basicAttack + 1);
+    } else if (userChoice === "Blessing of Inoin"){
+      setBlessing("Your gesture was blessed by the great god Inoin. You gain +3 basic attac");
+      setBasicAttack(basicAttack + 3);
+    }
+      setChoices([]);
+      setCurrentQuestionIndex(31);
+    } else if (currentQuestionIndex === 31) {
+      gainXP(5);
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice},
+      ]);
+      setCurrentQuestionIndex(32);
     }
   };
   
@@ -576,7 +620,16 @@ export default function Game() {
             <span className="typing-effect">{displayText}</span>
           </div>
           <div className="user-response">
-            {currentQuestionIndex === 1 || currentQuestionIndex === 2 || currentQuestionIndex === 3 || currentQuestionIndex === 4 || currentQuestionIndex === 5 || currentQuestionIndex === 6 || currentQuestionIndex === 7 || currentQuestionIndex === 8 || currentQuestionIndex === 9 || currentQuestionIndex === 10 || currentQuestionIndex === 11 || currentQuestionIndex === 12 || currentQuestionIndex === 13 || currentQuestionIndex === 14 || currentQuestionIndex === 15 || currentQuestionIndex === 16 || currentQuestionIndex === 17 || currentQuestionIndex === 18 || currentQuestionIndex === 19 || currentQuestionIndex === 20 || currentQuestionIndex === 21 || currentQuestionIndex === 22 || currentQuestionIndex === 23 || currentQuestionIndex === 24 || currentQuestionIndex === 25 || currentQuestionIndex === 26 || currentQuestionIndex === 27 || currentQuestionIndex === 28? (
+            {currentQuestionIndex === 0 ? (
+                <input
+                type="text"
+                placeholder="Your response"
+                value={inputText}
+                onChange={handleInputChange}
+                disabled={isTyping}
+                className="user-input"
+              />
+            ) : (
               <div className="questions-buttons">
                 {choices.map((choice, index) => (
                   <button
@@ -589,15 +642,6 @@ export default function Game() {
                   </button>
                 ))}
               </div>
-            ) : (
-              <input
-                type="text"
-                placeholder="Your response"
-                value={inputText}
-                onChange={handleInputChange}
-                disabled={isTyping}
-                className="user-input"
-              />
             )}
             <div className="submit-button">
               { (userLife > 0)?(<button 
