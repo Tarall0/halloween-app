@@ -117,8 +117,8 @@ export default function Game() {
     "User last action",
     "If user Dead",
     "If enemy beaten",
-    "You go out the fight",
-    "If escaped ",
+    "if escaped",
+    "out of the fight, going to second scenario ",
     "If fight ended",
     "Going to second scenario",
   ];
@@ -188,12 +188,28 @@ export default function Game() {
         setEnemyLife(enemyLife - punchDamage);
         setAttack(punchDamage);
       } else if (choice === weapon) {
-        // Implement logic for using the user's weapon
-        // Define damage for the weapon action
-        const weaponDamage = 5; 
-        setAttack(weaponDamage);
+        // Logic for weapon option choice 
+        // const weaponDamage = 5; 
+        // setAttack(weaponDamage);
         
-        setEnemyLife(enemyLife - weaponDamage);
+        // setEnemyLife(enemyLife - weaponDamage);
+        switch(choice){
+          case "🗡️ Sword":
+            const randSwordDamage = Math.floor(Math.random() * 10 + 2);
+            setAttack(randSwordDamage);
+            setEnemyLife(enemyLife - randSwordDamage);
+            break;
+          case "🔫 Gun":
+            const gunDamage = 7;
+            setAttack(gunDamage);
+            setEnemyLife(enemyLife - gunDamage);
+            break;
+          default: 
+            const weaponDamage = attack;
+            setAttack(weaponDamage);
+            setEnemyLife(enemyLife - weaponDamage);
+            break;
+        }
       } else if (choice === "Escape") {
         setChoices([]);
         setCurrentQuestionIndex(24);
@@ -437,8 +453,8 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-box">
-        <div className="game-head">
-          {characterClass ? (<div className="user-info">
+        <div className={`game-head`}>
+          {characterClass && (userLife <= 0) ? (<div className="user-info">
             <p className="user-basic"><b>{username}</b> — {characterClass}
             </p>
             <p className="user-life">
@@ -477,12 +493,27 @@ export default function Game() {
               />
             )}
             <div className="submit-button">
-              <button 
+              { (userLife > 0)?(<button 
                 onClick={handleNextQuestion} 
                 disabled={isTyping || !inputText || currentQuestionIndex === 22}>
                   {isTyping ? "Writing... " : "Next"}
-              </button>
+              </button>) : (
+                <button
+                  onClick={() => {}}>
+                    Restart Game
+                  </button>
+              )}
             </div>
+
+            {(userLife <= 0) ? (
+              <div className="game-lose">
+
+                <h3>Game Over</h3>
+                <h4>You lost this session</h4>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
 
