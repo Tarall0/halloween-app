@@ -331,8 +331,16 @@ export default function Game() {
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
         ]);
-      setCurrentQuestionIndex(14); 
-      setChoices([]);
+        if(enemyLife <= 0){
+          setCurrentQuestionIndex(23);
+        } else {
+          // Enemy 2nd Attack
+          const randomAttack = Math.floor(Math.random() * 2);
+          setEnemyAttack(randomAttack);
+          setUserLife(userLife - randomAttack);
+          setCurrentQuestionIndex(14);
+        }
+        setChoices([]);
     } else if (currentQuestionIndex === 14) {
       setChatHistory([
         ...chatHistory,
