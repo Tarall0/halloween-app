@@ -580,7 +580,6 @@ border-radius: 100%;
 
   border-right: 2px solid var(--foreground);
   animation: blink 1s step-end infinite;
-  padding-right: 5px;
 }
 
 @keyframes blink {
