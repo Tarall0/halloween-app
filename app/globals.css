@@ -575,3 +575,16 @@ border-radius: 100%;
   pointer-events: none;
   z-index: 9999;
 }
+
+.typing-effect{
+
+  border-right: 2px solid var(--foreground);
+  animation: blink 1s step-end infinite;
+  padding-right: 5px;
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
