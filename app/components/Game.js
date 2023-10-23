@@ -3,6 +3,7 @@ import  { useState, useEffect } from "react";
 export default function Game() {
   const [userLife, setUserLife] = useState(3);
   const [username, setUsername] = useState("");
+  const [goal, setGoal] = useState("");
   const [characterClass, setCharacterClass] = useState("");
   const [weapon, setWeapon] = useState("No weapon");
   const [weaponDesc, setWeaponDesc] = useState("");
@@ -25,6 +26,7 @@ export default function Game() {
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
   const [blessing, setBlessing] = useState();
+
 
   const gainXP = (xpAmount) => {
     let updatedXP = userXP + xpAmount;
@@ -78,7 +80,7 @@ export default function Game() {
     "just to finish this game."
   ]
 
-  const goal = goals[Math.floor(Math.random() * goals.length)];
+  const randomGoal = goals[Math.floor(Math.random() * goals.length)];
   
   
   
@@ -133,6 +135,16 @@ export default function Game() {
       return `You chose to care for the animal. What a nice gesture. ${randomAnimal} stands up and watches you. Suddenly it is enveloped in a magnificent light, takes the form of a spirit.`;
     }else if(index === 31) { // User blessing
       return `${blessing}`;
+    }else if(index === 35) { // User decide to explore further
+      return `I like your adventurous spirit ${username}. Let's go and see.`;
+    }else if (index === 45) {
+      return `I understand you have decided to accept ${weapon}. It gives off a powerful energy...`
+    }else if (index === 46) {
+      return `<< Well, now ${username} I would like to be left alone. I'll smoke a few joints and meditate on what to do. It's been a pleasure to meet you. >>`
+    }else if (index === 47) {
+      return `You turn your back on the old woman, who hardly noticed you move, and continue on your way.`
+    }else if (index === 49) {
+      return `${username} we are currently developing this game. Come back later.`
     }else {
       return questions[index];
     }
@@ -171,7 +183,24 @@ export default function Game() {
     "If user chose to help the animal", 
     "Because you helped the poor animal. Here is a blessing for you, choose.", 
     "Your gesture has been blessed by gods",
-    "I understand there are more important things at the moment and that you have decided to go ahead..." // to implement
+    "I understand there are more important things at the moment and that you have decided to go ahead...",
+    "The sun has gone down. However, the smoke is still present in the same direction and you decide to continue.",
+    "The scenario of destruction around you is shocking. Wait a moment. Did you see that light in that abandoned building?",
+    "Yes the user see and decide to go", //35
+    "As you approach the half-destroyed house, you notice an elderly lady sitting outside, as if waiting for someone.",
+    "She immediately turns to face you.",
+    "Notice in her face how melancholy is now present in the elderly woman's thoughts at all times.",
+    "Poor woman... she must have suffered so much.", // 39
+    "<< What happened to me you say? I was a fighting witch for the king's army. After the destruction of this timeline, I went back to find my family. This is what was left... >>",
+    "The old woman gets up, shifts her crumpled and badly put on cloak to reveal a shining gold necklace with a sparkling purple stone in the center.",
+    "<< This is Evelin's sacred necklace. The first witch in my family. It has been treasured for hundreds of years and would be passed down to one of my children after my death. However, there is none of them left... >>",
+    "If who cares", //43
+    "<< Do you want to take this necklace with you? It could allow you to obtain great powers. Or it could be just a piece of gold with a rock. >>",
+    "User pick the weapon",
+    "Goodbyes",
+    "Final convo with the witch",
+    "Darkness has now fallen. You keep walking in the direction of the smoke; it seems to be close.", //48
+    "Sorry ${username}" //49th
   ];
 
   const armorSpecials = [
@@ -191,7 +220,7 @@ export default function Game() {
       setIsTyping(true);
       setDisplayText("");
   
-      const delay = 60;
+      const delay = 10;
       let currentIndex = 0;
   
       const typingInterval = setInterval(() => {
@@ -228,7 +257,7 @@ export default function Game() {
   const handleChoiceClick = (choice, index) => {
     setSelectedChoiceIndex(index);
 
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28 || currentQuestionIndex === 29 || currentQuestionIndex === 30) {
+    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28 || currentQuestionIndex === 29 || currentQuestionIndex === 30 || currentQuestionIndex === 34 || currentQuestionIndex === 35 || currentQuestionIndex === 39 || currentQuestionIndex === 42 || currentQuestionIndex === 44) {
       //
       setUserChoice(choice);
       
@@ -287,6 +316,9 @@ export default function Game() {
   const handleNextQuestion = () => {
     const currentQuestion = getQuestionText(currentQuestionIndex);
     setBasicAttack(userLevel);
+    setGoal(randomGoal);
+    console.log("Current Question Index: ", currentQuestionIndex);
+
   
     if (currentQuestionIndex === 0 && username) {
       setChatHistory([
@@ -418,7 +450,7 @@ export default function Game() {
           // Enemy 2nd Attack
           const randomAttack = Math.floor(Math.random() * 2);
           setEnemyAttack(randomAttack);
-          setUserLife(userLife - randomAttack);
+          setUserLife(userLife - enemyAttack);
           setCurrentQuestionIndex(14);
         }
         setChoices([]);
@@ -436,7 +468,7 @@ export default function Game() {
       // Enemy Attack
       const randomAttack = Math.floor(Math.random() * 2 + 1);
     setEnemyAttack(randomAttack);
-    setUserLife(userLife - randomAttack);
+    setUserLife(userLife - enemyAttack);
     setCurrentQuestionIndex(16); 
     } else if (currentQuestionIndex === 16) {
       setChatHistory([
@@ -548,7 +580,6 @@ export default function Game() {
       setCurrentQuestionIndex(28);
       setChoices(["try to cure", "leave it there and ignore"]);
     } else if (currentQuestionIndex === 28){
-      gainXP(5);
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion, answer: userChoice},
@@ -557,7 +588,6 @@ export default function Game() {
         gainXP(10);
         setCurrentQuestionIndex(29);
       } else if (userChoice === "leave it there and ignore"){
-        gainXP(5);
         setCurrentQuestionIndex(32);
       }
       setChoices([]);
@@ -569,18 +599,17 @@ export default function Game() {
       setChoices(["Blessing of Amar", "Blessing of Inoin"])
       setCurrentQuestionIndex(30);
     } else if (currentQuestionIndex === 30){
-      gainXP(10);
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion, answer: userChoice},
       ]);
 
-      if(userChoice === "Blessing of Amar"){
-      setBlessing("Your gesture was blessed by the great god Amar. You gain 1 heart and a +1 basic attack");
+      if(userChoice === "Blessing of Inoin"){
+      setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
       setUserLife(userLife + 1);
       setBasicAttack(basicAttack + 1);
-    } else if (userChoice === "Blessing of Inoin"){
-      setBlessing("Your gesture was blessed by the great god Inoin. You gain +3 basic attac");
+    } else{
+      setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
       setBasicAttack(basicAttack + 3);
     }
       setChoices([]);
@@ -599,7 +628,157 @@ export default function Game() {
         { question: currentQuestion},
       ]);
       setCurrentQuestionIndex(33);
+    } else if (currentQuestionIndex === 33) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setChoices(["Yes", "No"]);
+      setCurrentQuestionIndex(34);
+    } if (currentQuestionIndex === 34) {
+      if (userChoice === "Yes") {
+        // Update chatHistory for the user's choice
+        setChatHistory([
+          ...chatHistory,
+          { question: currentQuestion, answer: userChoice },
+        ]);
+    
+        // Set the next available questions and choices
+        setChoices(["Go and see", "It could be dangerous"]);
+        setCurrentQuestionIndex(35);
+      } else if (userChoice === "No") {
+        // Update chatHistory for the user's choice
+        setChatHistory([
+          ...chatHistory,
+          { question: currentQuestion, answer: userChoice },
+        ]);
+        
+        setChoices([]);
+        // Handle the "No"
+        setCurrentQuestionIndex(48);
+      }
+      } else if (currentQuestionIndex === 35) {
+        if (userChoice === "Go and see") {
+          // Update chatHistory for the user's choice
+          setChatHistory([
+            ...chatHistory,
+            { question: currentQuestion, answer: userChoice },
+          ]);
+      
+          // Clear choices
+          setChoices([]);
+      
+          // Set the next question
+          setCurrentQuestionIndex(36);
+        } else if (userChoice === "It could be dangerous") {
+          setChatHistory([
+            ...chatHistory,
+            { question: currentQuestion, answer: userChoice },
+          ]);
+      
+          // Handle the "It could be dangerous"
+          setCurrentQuestionIndex(49);
+        }
+      }
+    else if (currentQuestionIndex === 36) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(37);
+    } else if (currentQuestionIndex === 37) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(38);
+    }else if (currentQuestionIndex === 38) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setChoices(["What happened to you?", "Who cares..."])
+    setCurrentQuestionIndex(39);
+    }else if (currentQuestionIndex === 39) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice},
+      ]);
+      if (userChoice === "What happened to you?") {
+        setCurrentQuestionIndex(40);
+      } else if (userChoice === "Who cares...") {
+        setCurrentQuestionIndex(43);
+      }
+      setChoices([]);
+    } else if (currentQuestionIndex === 40) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(41);
+    } else if (currentQuestionIndex === 41) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(42);
+    }else if (currentQuestionIndex === 42) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setChoices([`No thanks`, `Swap with ${weapon}`])
+      setCurrentQuestionIndex(44);
+    } else if (currentQuestionIndex === 43) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(46); //check
+  } else if (currentQuestionIndex === 44) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion, answer: userChoice},
+    ]);
+    setChoices([]);
+    if(userChoice === `No thanks`){
+      setCurrentQuestionIndex(46);
+    } else {
+      setWeapon("📿 Evelin's Necklace")
+      setCurrentQuestionIndex(45)
     }
+  } else if (currentQuestionIndex === 45) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(46);
+  }else if (currentQuestionIndex === 46) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(47);
+  }else if (currentQuestionIndex === 47) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(48);
+  }else if (currentQuestionIndex === 48) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(49);
+  } else if (currentQuestionIndex === 49) {
+    setChatHistory([
+      ...chatHistory,
+      { question: currentQuestion},
+    ]);
+    setCurrentQuestionIndex(50);
+  }
+
   };
   
 
