@@ -220,7 +220,7 @@ export default function Game() {
       setIsTyping(true);
       setDisplayText("");
   
-      const delay = 50;
+      const delay = 60;
       let currentIndex = 0;
   
       const typingInterval = setInterval(() => {
