@@ -21,7 +21,7 @@ export default function Game() {
   const [basicAttack, setBasicAttack] = useState(1);
   const [attack, setAttack] = useState(); 
   const [enemyAttack, setEnemyAttack] = useState("");
-  const [userXP, setUserXP] = useState(90);
+  const [userXP, setUserXP] = useState(0);
   const [userLevel, setUserLevel] = useState(1);
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
