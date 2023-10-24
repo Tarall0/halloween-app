@@ -21,19 +21,23 @@ export default function Game() {
   const [basicAttack, setBasicAttack] = useState(1);
   const [attack, setAttack] = useState(); 
   const [enemyAttack, setEnemyAttack] = useState("");
-  const [userXP, setUserXP] = useState(0);
+  const [userXP, setUserXP] = useState(90);
   const [userLevel, setUserLevel] = useState(1);
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
   const [blessing, setBlessing] = useState();
+  const [xpModifier, setXpModifier] = useState(1);
+  const [hasLeveled, setHasLeveled] = useState(false);
+  const [classPower, setClassPower] = useState("");
 
 
   const gainXP = (xpAmount) => {
-    let updatedXP = userXP + xpAmount;
+    let updatedXP = userXP + (xpAmount * xpModifier);
     
     if (updatedXP >= maxXPForNextLevel) {
       // Calculate the number of level ups based on the accumulated XP
       const levelUps = Math.floor(updatedXP / maxXPForNextLevel);
+      setHasLeveled(true);
       
       // Level up for each level achieved
       for (let i = 0; i < levelUps; i++) {
@@ -51,6 +55,10 @@ export default function Game() {
     
     // Update the user's XP with the remaining XP
     setUserXP(updatedXP);
+
+    setTimeout(() => {
+      setHasLeveled(false);
+    }, 3000)
   };
   
   const enemies = [
@@ -122,7 +130,7 @@ export default function Game() {
     }else if(index === 22) { // If user is dead because of the fight
       return `Oh no ${username}. ${enemy} is assailed by anger. It suddenly attacks you. You lose consciousness. ${enemy} defeated you.`;
     }else if(index === 23) { // If user defeat enemy
-      return `Well done ${username}! ${enemy} has been defeated.`;
+      return `Well done ${username}! ${enemy} has been defeated. (${attack} damages from by last hit)`;
     }else if(index === 24) { // if escaped
       return `You managed to escape this time...`;
     }else if(index === 25) { // Going out the fight 
@@ -145,6 +153,10 @@ export default function Game() {
       return `You turn your back on the old woman, who hardly noticed you move, and continue on your way.`
     }else if (index === 49) {
       return `${username} we are currently developing this game. Come back later.`
+    } else if (index === 50) {
+      return `A menacing figure steps out from the shadows, its eyes glinting with malicious intent as it readies for combat.`
+    } else if (index === 51) {
+      return `A menacing figure steps out from the shadows, its eyes glinting with malicious intent as it readies for combat.`
     }else {
       return questions[index];
     }
@@ -194,26 +206,26 @@ export default function Game() {
     "<< What happened to me you say? I was a fighting witch for the king's army. After the destruction of this timeline, I went back to find my family. This is what was left... >>",
     "The old woman gets up, shifts her crumpled and badly put on cloak to reveal a shining gold necklace with a sparkling purple stone in the center.",
     "<< This is Evelin's sacred necklace. The first witch in my family. It has been treasured for hundreds of years and would be passed down to one of my children after my death. However, there is none of them left... >>",
-    "If who cares", //43
+    "You certainly have something else on your mind right now.", //43
     "<< Do you want to take this necklace with you? It could allow you to obtain great powers. Or it could be just a piece of gold with a rock. >>",
     "User pick the weapon",
     "Goodbyes",
     "Final convo with the witch",
     "Darkness has now fallen. You keep walking in the direction of the smoke; it seems to be close.", //48
-    "Sorry ${username}" //49th
+    "Sorry ${username}", //49th
+    "..",
   ];
 
   const armorSpecials = [
     "This will let you gain two additional hearts",
     "Nice sword! This will let you inflict additional 2 - 12 damage to enemies",
     "Perfect for distance shot! Additional 7 damage to enemies",
-    "Mysterious rock",
+    "Mysterious rock. You obtain +1 Heart and x2 XP",
   ]
-
-
   
 
   useEffect(() => {
+
     if (currentQuestionIndex < questions.length) {
       const question = getQuestionText(currentQuestionIndex);
   
@@ -291,8 +303,18 @@ export default function Game() {
             setAttack(gunDamage);
             setEnemyLife(enemyLife - gunDamage);
             break;
+          case "💎 Rock":
+            const rockDamage = 2 + basicAttack;
+            setAttack(rockDamage);
+            setEnemyLife(enemyLife - gunDamage);
+            break;
+          case "📿 Evelin's Necklace":
+            const magicalDamage = (Math.floor(Math.random() * 30 + 2)) + basicAttack;
+            setAttack(magicalDamage);
+            setEnemyLife(enemyLife - magicalDamage);
+            break;
           default: 
-            const weaponDamage = attack + basicAttack;
+            const weaponDamage = basicAttack;
             setAttack(weaponDamage);
             setEnemyLife(enemyLife - weaponDamage);
             break;
@@ -306,17 +328,39 @@ export default function Game() {
     else if (currentQuestionIndex === 7) {
       // If this is the weapon selection
       setWeapon(choice);
-    } else { 
+    } else if (currentQuestionIndex === 3) { 
       // Else for now it will be the character class selection
       setCharacterClass(choice);
+      switch(choice) {
+        case "🤵 Human":
+          setBasicAttack(1);
+          setUserLife(3);
+          setClassPower("👊 Power Fist");
+          break;
+        case "🧙‍♀️ Witch":
+          setBasicAttack(3);
+          setUserLife(2);
+          setClassPower("✨ Magical Hit");
+          break;
+        case "🧛 Vampire":
+          setBasicAttack(2);
+          setUserLife(3);
+          setClassPower("🩸 Bite");
+          break;
+        case "👻 Ghost":
+          setBasicAttack(1);
+          setUserLife(5);
+          setClassPower("😱 Scare");
+          break;
+      }
     }
 };
 
   
   const handleNextQuestion = () => {
-    const currentQuestion = getQuestionText(currentQuestionIndex);
-    setBasicAttack(userLevel);
+
     setGoal(randomGoal);
+    const currentQuestion = getQuestionText(currentQuestionIndex);
     console.log("Current Question Index: ", currentQuestionIndex);
 
   
@@ -379,6 +423,7 @@ export default function Game() {
       switch(weapon){
         case "🧪 Potion":
           setUserLife(userLife + 2);
+          setBasicAttack(basicAttack + 1);
           setWeaponDesc(armorSpecials[0]);
           break;
         case "🗡️ Sword":
@@ -389,6 +434,8 @@ export default function Game() {
           break;
         case "💎 Rock":
           setWeaponDesc(armorSpecials[3]);
+          setUserLife(userLife + 1);
+          setXpModifier(2);
           break;
         default: 
           break;
@@ -436,7 +483,7 @@ export default function Game() {
         } else if (userChoice === "🤺 Fight") {
           gainXP(10);
           setCurrentQuestionIndex(13);
-          setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
+          setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
         }
       } else if (currentQuestionIndex === 13) {
         gainXP(5);
@@ -476,7 +523,7 @@ export default function Game() {
         { question: currentQuestion,  answer:`${userLife} life points left`},
       ]);
     setCurrentQuestionIndex(17);
-    setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
+    setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
     } else if (currentQuestionIndex === 17) {
       gainXP(5);
       setChatHistory([
@@ -509,7 +556,7 @@ export default function Game() {
         ...chatHistory,
         { question: currentQuestion},
       ]);
-      setChoices([`Kick`, `Punch`, `${weapon}`, `Escape`]);
+      setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
       setCurrentQuestionIndex(20); 
     } else if (currentQuestionIndex === 20) {
       gainXP(5);
@@ -642,8 +689,6 @@ export default function Game() {
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
         ]);
-    
-        // Set the next available questions and choices
         setChoices(["Go and see", "It could be dangerous"]);
         setCurrentQuestionIndex(35);
       } else if (userChoice === "No") {
@@ -659,7 +704,7 @@ export default function Game() {
       }
       } else if (currentQuestionIndex === 35) {
         if (userChoice === "Go and see") {
-          // Update chatHistory for the user's choice
+          gainXP(10);
           setChatHistory([
             ...chatHistory,
             { question: currentQuestion, answer: userChoice },
@@ -667,16 +712,12 @@ export default function Game() {
       
           // Clear choices
           setChoices([]);
-      
-          // Set the next question
           setCurrentQuestionIndex(36);
         } else if (userChoice === "It could be dangerous") {
           setChatHistory([
             ...chatHistory,
             { question: currentQuestion, answer: userChoice },
           ]);
-      
-          // Handle the "It could be dangerous"
           setCurrentQuestionIndex(49);
         }
       }
@@ -744,6 +785,7 @@ export default function Game() {
     if(userChoice === `No thanks`){
       setCurrentQuestionIndex(46);
     } else {
+      gainXP(10);
       setWeapon("📿 Evelin's Necklace")
       setCurrentQuestionIndex(45)
     }
@@ -777,7 +819,32 @@ export default function Game() {
       { question: currentQuestion},
     ]);
     setCurrentQuestionIndex(50);
-  }
+    } else if (currentQuestionIndex === 50) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion},
+      ]);
+      setCurrentQuestionIndex(51);
+      // 2nd enemy encounter
+      const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+      const randomEnemyLife = Math.floor(Math.random() * 15 + 8);
+      setEnemyLife(randomEnemyLife);
+      setEnemy(randomEnemy);
+      setChoices(["🏃 Escape", "🤺 Fight"]);
+    }  else if (currentQuestionIndex === 51) {
+      setChatHistory([
+        ...chatHistory,
+        { question: currentQuestion, answer: userChoice },
+      ]);
+        if (userChoice === "🏃 Escape") {
+          setCurrentQuestionIndex(60);
+          setChoices([]); // Clear choices when the user escapes
+        } else if (userChoice === "🤺 Fight") {
+          gainXP(10);
+          setCurrentQuestionIndex(52);
+          setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
+        }
+    }
 
   };
   
@@ -793,6 +860,11 @@ export default function Game() {
                 {userXP} XP
               </div>
             </div>
+            <div className="user-stats">
+              <div><span className="stats-label">Basic Attack:</span> {basicAttack}</div>
+              <div>{weapon}</div>
+            </div>
+            {hasLeveled ? (<span className="level-up">You just levelled up!</span>) : ("")}
             </div>
             <p className="user-life">
               {hearts.map((heart, index) => (
