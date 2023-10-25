@@ -616,6 +616,7 @@ export default function Game() {
       setCurrentQuestionIndex(22);
     } else if (currentQuestionIndex === 23){
       // Enemy is defeated
+      setEnemyLife();
       setChatHistory([
         ...chatHistory,
         { question: currentQuestion,},
@@ -677,7 +678,8 @@ export default function Game() {
 
       if(userChoice === "Blessing of Inoin"){
       setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
-      setUserLife(userLife + 1);
+      let newMaxUserLife = maxUserLife + 1;
+      setMaxUserLife(newMaxUserLife);
       setBasicAttack(basicAttack + 1);
     } else{
       setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
