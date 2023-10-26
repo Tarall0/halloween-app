@@ -94,13 +94,13 @@ const Countdown = () => {
         <div className='loading'>
           I am calculating the time left ... 
         </div>
-      ) : timeRemaining <= 0 ? (
+      ) : (timeRemaining <= 0) && showMessage ? (
         // Elements to add if it is actually Halloween
         <div className='halloween-day'>
           <p>🎃<b> Good news!</b> The time is finally here.</p>
           <div className='halloween-buttons'>
-          <button>👻 Trick</button>
-          <button>🍬 Treat</button>
+          <button onClick={playGame}>👻 Play Game</button>
+          <button onClick={handleDimiss}>🍬 Dimiss</button>
           </div>
         </div>
       ) : (
@@ -153,7 +153,7 @@ const Countdown = () => {
         <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
 
         <audio ref={audioRef} autoPlay loop style={{ display: isMusicPlaying ? 'block' : 'none' }}>
-          <source src="https://tarallotest.it/halloween-audio.mp3" type="audio/mpeg" />
+          <source src="https://tarallotest.it/let-the-mystery-unfold-122118.mp3" type="audio/mpeg" />
         </audio>
 
         {

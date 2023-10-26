@@ -35,7 +35,8 @@ export default function Game() {
 
   const decreaseLife = (amount) => {
     if (userLife > 0) {
-      setUserLife(userLife - amount);
+      let newLife = userLife - amount;
+      setUserLife(newLife);
     }
   };
 
@@ -678,8 +679,8 @@ export default function Game() {
 
       if(userChoice === "Blessing of Inoin"){
       setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
-      let newMaxUserLife = maxUserLife + 1;
-      setMaxUserLife(newMaxUserLife);
+      let newUserLife = userLife + 1;
+      setMaxUserLife(newUserLife);
       setBasicAttack(basicAttack + 1);
     } else{
       setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
@@ -852,10 +853,10 @@ export default function Game() {
       ]);
       setCurrentQuestionIndex(51);
       // 2nd enemy encounter
-      const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
-      const randomEnemyLife = Math.floor(Math.random() * 15 + 8);
-      setEnemyLife(randomEnemyLife);
-      setEnemy(randomEnemy);
+      const secondEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+      const secondEnemyLife = Math.floor(Math.random() * 15 + 8);
+      setEnemyLife(secondEnemyLife);
+      setEnemy(secondEnemy);
       setChoices(["🏃 Escape", "🤺 Fight"]);
     }  else if (currentQuestionIndex === 51) {
       setChatHistory([
