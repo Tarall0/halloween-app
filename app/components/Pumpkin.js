@@ -1,8 +1,29 @@
 import "../styles/pumpkin.css"
+import { useState } from "react";
 
 const Pumpkin = () => {
+
+  const [showPumpkin, setShowPumpkin] = useState(false);
+
+  const pumpkinClick = () => {
+    setShowPumpkin(true);
+    
+    setTimeout(() => {
+      setShowPumpkin(false);
+    }, 5000);
+
+  }
+
+
   return (
-    <div className="pumpkin">
+    <>
+
+    <div className="pumpkin" onClick={pumpkinClick}>
+    {showPumpkin ? (
+      <div className="pumpkin-msg">Happy halloween!</div>
+    ) : (
+      ""
+    )}
     <div className="stalk"></div>
     <div className="segments">
       <div className="segment left-2"></div>
@@ -17,8 +38,11 @@ const Pumpkin = () => {
       <div className="eye right-eye"></div>
     </div>
     
-    <div class="mouth"></div>
+    <div className="mouth">
+      <div className="right-teeth"></div>
+    </div>
   </div>
+  </>
   );
 };
 

@@ -38,6 +38,7 @@ const Countdown = () => {
 
     const returnHome = () => {
       setGame(false);
+      setShowMessage(true);
       setIsMusicPlaying(false);
       if (audioRef.current) {
         audioRef.current.pause();
@@ -96,13 +97,16 @@ const Countdown = () => {
         </div>
       ) : (timeRemaining <= 0) && showMessage ? (
         // Elements to add if it is actually Halloween
+        <>
+        <Pumpkin/>
         <div className='halloween-day'>
-          <p>🎃<b> Good news!</b> The time is finally here.</p>
+          <p><b> Good news!</b> The time is finally here.</p>
           <div className='halloween-buttons'>
           <button onClick={playGame}>👻 Play Game</button>
           <button onClick={handleDimiss}>🍬 Dimiss</button>
           </div>
         </div>
+        </>
       ) : (
         // Elements to render when the condition is false
           showMessage && (
@@ -128,7 +132,7 @@ const Countdown = () => {
               ) : null
             )}
           </>
-        ) : (
+        ) : (timeRemaining > 0) ? (
           <div className='halloween-box'>
             <h1 className='gradient-text'>Halloween Countdown</h1>
             <div className="countdown">
@@ -146,12 +150,16 @@ const Countdown = () => {
                 </div>
             </div>
           </div>
+        ) : (
+          <div className='halloween-box'>
+            <h1 className='gradient-text'>Happy Halloween</h1>
+          </div>
         )}
 
         <FullMoon/>
         <Ghosts/>       
         <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
-
+        
         <audio ref={audioRef} autoPlay loop style={{ display: isMusicPlaying ? 'block' : 'none' }}>
           <source src="https://tarallotest.it/let-the-mystery-unfold-122118.mp3" type="audio/mpeg" />
         </audio>

@@ -40,6 +40,13 @@ export default function Game() {
     }
   };
 
+  const gainLife = (amount) => {
+    if(userLife < maxUserLife){
+      let newLife = userLife + amount;
+      setUserLife(newLife);
+    }
+  }
+
   const gainXP = (xpAmount) => {
     let updatedXP = userXP + (xpAmount * xpModifier);
     
@@ -332,7 +339,16 @@ export default function Game() {
             setEnemyLife(enemyLife - weaponDamage);
             break;
         }
-      } else if (choice === "Escape") {
+      } else if (choice === "🩸 Bite") {
+        const biteDamage = (Math.floor(Math.random() * 6)) + basicAttack;
+        const lifeGained = biteDamage/2;
+        console.log("Life Gained"+lifeGained+ " - Bite Damage" +biteDamage);
+        setAttack(biteDamage);
+        setEnemyLife(enemyLife - biteDamage);
+        gainLife(lifeGained);
+            
+      }
+      else if (choice === "Escape") {
         setChoices([]);
         setCurrentQuestionIndex(24);
         
@@ -498,7 +514,6 @@ export default function Game() {
           { question: currentQuestion, answer: userChoice },
         ]);
         if (userChoice === "🏃 Escape") {
-          gainXP(5);
           setCurrentQuestionIndex(24);
           setChoices([]); // Clear choices when the user escapes
         } else if (userChoice === "🤺 Fight") {
@@ -507,7 +522,6 @@ export default function Game() {
           setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
         }
       } else if (currentQuestionIndex === 13) {
-        gainXP(5);
         setChatHistory([
           ...chatHistory,
           { question: currentQuestion, answer: userChoice },
@@ -518,20 +532,20 @@ export default function Game() {
           // Enemy Attack
           const randomAttack = Math.floor(Math.random() * 2);
           setEnemyAttack(randomAttack);
-          decreaseLife(enemyAttack);
+          decreaseLife(randomAttack);
           setCurrentQuestionIndex(14);
         }
         setChoices([]);
     } else if (currentQuestionIndex === 14) {
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  answer: userChoice},
+        { question: currentQuestion},
       ]);
     setCurrentQuestionIndex(15); 
     } else if (currentQuestionIndex === 15) {
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  answer: userChoice},
+        { question: currentQuestion},
       ]);
       // Enemy Attack
       const randomAttack = Math.floor(Math.random() * 2 + 1);
@@ -541,7 +555,7 @@ export default function Game() {
     } else if (currentQuestionIndex === 16) {
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  answer:`${userLife} life points left`},
+        { question: currentQuestion},
       ]);
       setCurrentQuestionIndex(17);
       setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
@@ -564,7 +578,7 @@ export default function Game() {
     } else if (currentQuestionIndex === 18){
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion,  answer:`${userLife} life points left`},
+        { question: currentQuestion},
       ]);
       if(userLife <= 0) {
         setCurrentQuestionIndex(22);
@@ -602,7 +616,7 @@ export default function Game() {
     } else if (currentQuestionIndex === 21){
       setChatHistory([
         ...chatHistory,
-        { question: currentQuestion, answer: userChoice},
+        { question: currentQuestion},
       ]);
       if(userLife <= 0) {
         setCurrentQuestionIndex(22);

@@ -241,14 +241,14 @@ border-radius: 100%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 420;
-  bottom: 10px;
-  animation: fadeFromBottom .5s linear;
+  top: 10px;
+  animation: fadeFromTop .5s linear;
   font-family: "Roboto", sans-serif;
 }
 
-@keyframes fadeFromBottom {
+@keyframes fadeFromTop {
   0%{
-    transform: translate(-50%, 100%);
+    transform: translate(-50%, -100%);
     opacity: 0;
   }
 
