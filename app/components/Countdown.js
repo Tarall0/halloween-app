@@ -4,7 +4,6 @@ import FullMoon from './FullMoon';
 import Ghosts from './Ghosts';
 import Pumpkin from './Pumpkin';
 import Image from 'next/image';
-import Halloween from './Halloween';
 import Game from './Game';
 
 

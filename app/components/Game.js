@@ -44,6 +44,9 @@ export default function Game() {
   const witchRef = useRef(null);
   const wolfRef = useRef(null);
   const spiritRef = useRef(null);
+  const owlRef = useRef(null);
+  const snakeRef = useRef(null);
+  const mouseRef = useRef(null);
 
 
 
@@ -140,7 +143,6 @@ export default function Game() {
     "🦉 Owl",
     "🐁 Mouse",
     "🐍 Snake",
-    "🐿️ Chipmunk"
   ]
 
   const goals = [
@@ -497,6 +499,27 @@ export default function Game() {
     }
   }
 
+  const handleAnimalSound = (animal) => {
+   
+    switch(animal){
+      case "🦉 Owl":
+        if(owlRef.current){
+          owlRef.current.play();
+        }
+        break;
+      case "🐁 Mouse":
+        if(mouseRef.current){
+          mouseRef.current.play();
+        }
+        break;
+      case "🐍 Snake":
+        if(snakeRef.current){
+          snakeRef.current.play();
+        }
+        break;
+    }
+  }
+
   const handleNextQuestion = () => {
     const currentQuestion = getQuestionText(currentQuestionIndex);
     setUserLevel(1);
@@ -716,7 +739,7 @@ export default function Game() {
       case 17:
           setChatHistory([
               ...chatHistory,
-              { question: currentQuestion},
+              { question: currentQuestion, answer: userChoice},
           ]);
          
 
@@ -822,6 +845,7 @@ export default function Game() {
           break;
       case 27:
           // Wild animal appears
+          handleAnimalSound(randomAnimal);
           setChatHistory([
               ...chatHistory,
               { question: currentQuestion },
@@ -992,6 +1016,16 @@ export default function Game() {
           <source src="https://tarallotest.it/halloween/witch-laughing-104760.mp3" type="audio/mpeg" />
         </audio>
 
+        {/** Friendly animal sounds */}
+        <audio ref={owlRef}>
+          <source src="https://tarallotest.it/halloween/owl-humanatone-102805.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={snakeRef}>
+          <source src="https://tarallotest.it/halloween/snake-hissing-6092.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={mouseRef}>
+          <source src="https://tarallotest.it/halloween/mouse-6821.mp3" type="audio/mpeg" />
+        </audio>
         
 
         <div className="game-textarea">
