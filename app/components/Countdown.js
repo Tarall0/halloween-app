@@ -32,6 +32,7 @@ const Countdown = () => {
       setShowMessage(false);
       setIsMusicPlaying(true);
       if (audioRef.current) {
+        audioRef.current.volume = 0.2;
         audioRef.current.play();
       }
     }
@@ -158,10 +159,10 @@ const Countdown = () => {
 
         <FullMoon/>
         <Ghosts/>       
-        <Image src="https://tarallotest.it/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
+        <Image src="https://tarallotest.it/halloween/80350.png" width={500} height={500} loading='lazy' className='spooky-hill' alt='spooky hill image'></Image>
         
         <audio ref={audioRef} autoPlay loop style={{ display: isMusicPlaying ? 'block' : 'none' }}>
-          <source src="https://tarallotest.it/let-the-mystery-unfold-122118.mp3" type="audio/mpeg" />
+          <source src="https://tarallotest.it/halloween/let-the-mystery-unfold-122118.mp3" type="audio/mpeg" />
         </audio>
 
         {

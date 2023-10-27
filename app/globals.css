@@ -437,13 +437,18 @@ border-radius: 100%;
   padding: 1em;
   border-radius: 1.5em;
   transition: all 200ms ease;
+  cursor: pointer;
 }
 
-.questions-buttons button:hover, .questions-buttons button.selected, .questions-buttons button:first-child.selected{
+.questions-buttons button:hover{
   background-color: var(--lightGreen) !important;
   color: var(--foreground);
 }
 
+.questions-buttons button.selected, .questions-buttons button:first-child.selected{
+  background-color: var(--green) !important;
+  color: var(--foreground);
+}
 
 .submit-button{
   width: 100%;
@@ -497,7 +502,7 @@ border-radius: 100%;
   position: relative;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 600px) {
   .user-info{
     display: grid;
   }

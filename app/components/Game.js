@@ -1,8 +1,8 @@
-import  { useState, useEffect } from "react";
+import  { useState, useEffect, useRef } from "react";
 
 export default function Game() {
-  const [maxUserLife, setMaxUserLife] = useState(4);
-  const [userLife, setUserLife] = useState(3);
+  const [maxUserLife, setMaxUserLife] = useState(1);
+  const [userLife, setUserLife] = useState(1);
   const [username, setUsername] = useState("");
   const [goal, setGoal] = useState("");
   const [characterClass, setCharacterClass] = useState("");
@@ -25,7 +25,7 @@ export default function Game() {
   const [attack, setAttack] = useState(); 
   const [enemyAttack, setEnemyAttack] = useState("");
   const [userXP, setUserXP] = useState(0);
-  const [userLevel, setUserLevel] = useState(1);
+  const [userLevel, setUserLevel] = useState();
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
   const [blessing, setBlessing] = useState();
@@ -33,17 +33,61 @@ export default function Game() {
   const [hasLeveled, setHasLeveled] = useState(false);
   const [classPower, setClassPower] = useState("");
 
+  const [doorSound, setDoorSound] = useState(false);
+  const doorRef = useRef(null);
+  const enemyRef = useRef(null);
+  const punchRef = useRef(null);
+  const biteRef = useRef(null);
+  const ghostatkRef = useRef(null);
+  const magicRef = useRef(null);
+
+
+
+  const playDoorSound = () => {
+    console.log("Reach function")
+    setDoorSound(true);
+    if (doorRef.current) {
+      doorRef.current.load();
+      console.log("Playing osund...")
+      doorRef.current.play();
+    }
+  }
+
+  const playEnemySound = () => {
+    if(enemyRef.current){
+      enemyRef.current.play();
+    }
+  }
+
+  const playBiteSound = () => {
+    if(biteRef.current){
+      biteRef.current.play();
+    }
+  }
+
+  const playMagicSound = () => {
+    if(magicRef.current){
+      magicRef.current.play();
+    }
+  }
+
   const decreaseLife = (amount) => {
     if (userLife > 0) {
       let newLife = userLife - amount;
+      let blackHeartsnr = maxUserLife - newLife;
       setUserLife(newLife);
+      setBlackHeartsCount(blackHeartsnr);
+    } else if (userLife < 0) {
+      setUserLife(0);
     }
   };
 
   const gainLife = (amount) => {
     if(userLife < maxUserLife){
-      let newLife = userLife + amount;
+      const newLife = userLife + amount;
       setUserLife(newLife);
+    } else {
+      setUserLife(maxUserLife);
     }
   }
 
@@ -148,7 +192,7 @@ export default function Game() {
     }else if(index === 22) { // If user is dead because of the fight
       return `Oh no ${username}. ${enemy} is assailed by anger. It suddenly attacks you. You lose consciousness. ${enemy} defeated you.`;
     }else if(index === 23) { // If user defeat enemy
-      return `Well done ${username}! ${enemy} has been defeated. (${attack} damages from by last hit)`;
+      return `Well done ${username}! ${enemy} has been defeated. (${attack} damages inflicted from from last hit)`;
     }else if(index === 24) { // if escaped
       return `You managed to escape this time...`;
     }else if(index === 25) { // Going out the fight 
@@ -188,9 +232,9 @@ export default function Game() {
     "I understand. Now let's start our adventure!",
     "... ... ...",
     "You wake up unconscious in a dark room. What do you do?",
-    "You choose weapon",
+    "If explore choose weapon",
     "Nice weapon!",
-    "You find the exit and are out of the building.",
+    "You find the exit and are out of the building.", //9
     "You see ahead of you destroyed buildings, everything looks abandoned. You see on the horizon the sunset. It is almost evening.",
     "Wait a moment--do you hear that? Where is it coming from?!",
     "first enemy",
@@ -246,6 +290,9 @@ export default function Game() {
 
   useEffect(() => {
 
+    let blackHeartsnr = maxUserLife - userLife;
+    setBlackHeartsCount(blackHeartsnr);
+
     if (currentQuestionIndex < questions.length) {
       const question = getQuestionText(currentQuestionIndex);
   
@@ -273,620 +320,533 @@ export default function Game() {
     if (currentQuestionIndex === 0 ) {
       setUsername(event.target.value);
     }
-    
-    if (currentQuestionIndex === 3) {
-      setCharacterClass(event.target.value);
-    }
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 13) {
-      setUserChoice(event.target.value);
-    } 
-    if (currentQuestionIndex === 7) {
-      setWeapon(event.target.value);
-    } 
   };
+
+  const handleClassModifier = (pgClass) => {
+      switch(pgClass){
+        case "🤵 Human":
+          setMaxUserLife(3);
+          setUserLife(3);
+          setBasicAttack(1);
+          setClassPower("👊 Power Fist");
+          break;
+        case "🧙‍♀️ Witch":
+          setMaxUserLife(2);
+          setUserLife(2);
+          setBasicAttack(3);
+          setClassPower("✨ Magical Hit")
+          break;
+        case "🧛 Vampire":
+          setMaxUserLife(3);
+          setUserLife(3);
+          setBasicAttack(2);
+          setClassPower("🩸 Bite");
+          break;
+        case "👻 Ghost":
+          setMaxUserLife(4);
+          setUserLife(4);
+          setBasicAttack(1);
+          setClassPower("💀 Death Touch");
+          break;
+      }
+  }
   
 
   const handleChoiceClick = (choice, index) => {
     setSelectedChoiceIndex(index);
+  
+    switch (currentQuestionIndex) {
+      case 6:
+      case 11:
+      case 12:
+      case 28:
+      case 29:
+      case 30:
+      case 34:
+      case 35:
+      case 39:
+      case 42:
+      case 44:
+        setUserChoice(choice);
+        break;
+      case 13:
+      case 17:
+      case 20:
+        handleCombatChoice(choice);
+        break;
+      case 7:
+        setWeapon(choice);
+        break;
+      case 3:
+        setCharacterClass(choice)
+        handleClassModifier(choice);
+        break;
+      // Add more cases for other question indexes...
+      default:
+        break;
+    }
+  };
 
-    if (currentQuestionIndex === 6 || currentQuestionIndex === 12 || currentQuestionIndex === 28 || currentQuestionIndex === 29 || currentQuestionIndex === 30 || currentQuestionIndex === 34 || currentQuestionIndex === 35 || currentQuestionIndex === 39 || currentQuestionIndex === 42 || currentQuestionIndex === 44) {
-      //
-      setUserChoice(choice);
-      
-    } else if (currentQuestionIndex === 13 || currentQuestionIndex === 17 || currentQuestionIndex === 20) {
-      setUserChoice(choice);
-      if (choice === "Kick") {
-        // Define damage for the Kick action
-        const kickDamage = 3 + basicAttack;
-        setEnemyLife(enemyLife - kickDamage);
-        setAttack(kickDamage);
-        
-      } else if (choice === "Punch") {
-        // Define damage for the Punch action
-        const punchDamage = 2 + basicAttack;
-        setEnemyLife(enemyLife - punchDamage);
-        setAttack(punchDamage);
-      } else if (choice === weapon) {
-        // Logic for weapon option choice 
-        // const weaponDamage = 5; 
-        // setAttack(weaponDamage);
-        
-        // setEnemyLife(enemyLife - weaponDamage);
-        switch(choice){
-          case "🗡️ Sword":
-            const randSwordDamage = (Math.floor(Math.random() * 10 + 2)) + basicAttack;
-            setAttack(randSwordDamage);
-            setEnemyLife(enemyLife - randSwordDamage);
-            break;
-          case "🔫 Gun":
-            const gunDamage = 7 + basicAttack;
-            setAttack(gunDamage);
-            setEnemyLife(enemyLife - gunDamage);
-            break;
-          case "💎 Rock":
-            const rockDamage = 2 + basicAttack;
-            setAttack(rockDamage);
-            setEnemyLife(enemyLife - gunDamage);
-            break;
-          case "📿 Evelin's Necklace":
-            const magicalDamage = (Math.floor(Math.random() * 30 + 2)) + basicAttack;
-            setAttack(magicalDamage);
-            setEnemyLife(enemyLife - magicalDamage);
-            break;
-          default: 
-            const weaponDamage = basicAttack;
-            setAttack(weaponDamage);
-            setEnemyLife(enemyLife - weaponDamage);
-            break;
-        }
-      } else if (choice === "🩸 Bite") {
-        const biteDamage = (Math.floor(Math.random() * 6)) + basicAttack;
-        const lifeGained = biteDamage/2;
-        console.log("Life Gained"+lifeGained+ " - Bite Damage" +biteDamage);
-        setAttack(biteDamage);
-        setEnemyLife(enemyLife - biteDamage);
-        gainLife(lifeGained);
-            
-      }
-      else if (choice === "Escape") {
+  const handleCombatChoice = (choice) => {
+    setUserChoice(choice);
+  
+    switch (choice) {
+      case "Kick":
+        handleAttack(3 + basicAttack);
+        break;
+      case "Punch":
+        handleAttack(2 + basicAttack);
+        break;
+      case weapon:
+        handleWeaponChoice();
+        break;
+      case "🩸 Bite":
+        handleBite();
+        break;
+      case "✨ Magical Hit":
+        handleMagic();
+        break;
+      case "Escape":
         setChoices([]);
         setCurrentQuestionIndex(24);
-        
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleWeaponChoice = () => {
+    switch (weapon) {
+      case "🗡️ Sword":
+        handleAttack((Math.floor(Math.random() * 10 + 2)) + basicAttack);
+        break;
+      case "🔫 Gun":
+        handleAttack(7 + basicAttack);
+        break;
+      case "💎 Rock":
+        handleAttack(2 + basicAttack);
+        break;
+      case "📿 Evelin's Necklace":
+        handleAttack((Math.floor(Math.random() * 30 + 2)) + basicAttack);
+        break;
+      default:
+        handleAttack(basicAttack);
+        break;
+    }
+  };
+
+  const handleAttack = (damage) => {
+    setEnemyLife(enemyLife - damage);
+    setAttack(damage);
+  };
+
+  const handleBite = () => {
+    const biteDamage = (Math.floor(Math.random() * 6)) + basicAttack;
+    playBiteSound();
+    setAttack(biteDamage);
+    setEnemyLife(enemyLife - biteDamage);
+    if (fiftyChance()){
+      if(userLife < maxUserLife){
+        setUserLife(userLife +1);
       }
     }
-    else if (currentQuestionIndex === 7) {
-      // If this is the weapon selection
-      setWeapon(choice);
-    } else if (currentQuestionIndex === 3) { 
-      // Else for now it will be the character class selection
-      setCharacterClass(choice);
-      switch(choice) {
-        case "🤵 Human":
-          setBasicAttack(1);
-          setMaxUserLife(3);
-          setUserLife(3);
-          setClassPower("👊 Power Fist");
-          break;
-        case "🧙‍♀️ Witch":
-          setBasicAttack(3);
-          setMaxUserLife(2);
-          setUserLife(2);
-          setClassPower("✨ Magical Hit");
-          break;
-        case "🧛 Vampire":
-          setBasicAttack(2);
-          setMaxUserLife(3);
-          setUserLife(3);
-          setClassPower("🩸 Bite");
-          break;
-        case "👻 Ghost":
-          setBasicAttack(1);
-          setMaxUserLife(5);
-          setUserLife(5);
-          setClassPower("😱 Scare");
-          break;
-      }
-    }
-};
+  };
 
-  
-  const handleNextQuestion = () => {
+  const handleMagic = () => {
 
-    setGoal(randomGoal);
-    const currentQuestion = getQuestionText(currentQuestionIndex);
-    const blackHeartsnr = maxUserLife - userLife;
-    setBlackHeartsCount(blackHeartsnr);
-    console.log("Current Question Index: ", currentQuestionIndex);
-
-  
-    if (currentQuestionIndex === 0 && username) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: username },
-      ]);
-      setCurrentQuestionIndex(1);
-    } else if (currentQuestionIndex === 1) {
-      setChatHistory([...chatHistory, { question: currentQuestion }]);
-      setCurrentQuestionIndex(2);
-    } else if (currentQuestionIndex === 2) {
-      setChatHistory([...chatHistory, { question: currentQuestion }]);
-      setCurrentQuestionIndex(3);
-      setChoices(["🤵 Human", "🧙‍♀️ Witch", "🧛 Vampire", "👻 Ghost"]);
-    } else if (currentQuestionIndex === 3 && characterClass) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: characterClass },
-      ]);
-      setCurrentQuestionIndex(4);
-      setChoices([]);
-    } else if (currentQuestionIndex === 4) {
-      setChatHistory([...chatHistory, { question: currentQuestion }]);
-      setCurrentQuestionIndex(5);
-    } else if (currentQuestionIndex === 5) {
-      setChatHistory([...chatHistory, { question: currentQuestion }]);
-      setCurrentQuestionIndex(6);
-      setChoices(["keep exploring", "follow the light and exit the room"]);
-    } else if (currentQuestionIndex === 6) {
-      setChoices([]);
-      setChatHistory([...chatHistory, { question: currentQuestion }]);
-      if (userChoice === "keep exploring") {
-        // User chose to keep exploring
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        setCurrentQuestionIndex(7);
-        setChoices(["🧪 Potion", "🔫 Gun", "🗡️ Sword", "💎 Rock"]);
-      } else if (userChoice === "follow the light and exit the room") {
-        // User chose to follow the light and exit the room
-        gainXP(5);
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        setCurrentQuestionIndex(9); // Move to index 9
-      }
-    } else if (currentQuestionIndex === 7 && weapon) {
-      // Handle weapon selection
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: weapon },
-      ]);
-      gainXP(10);
-      setCurrentQuestionIndex(8);
-      setChoices([]);
-      switch(weapon){
-        case "🧪 Potion":
-          setUserLife(userLife + 2);
-          setBasicAttack(basicAttack + 1);
-          setWeaponDesc(armorSpecials[0]);
-          break;
-        case "🗡️ Sword":
-          setWeaponDesc(armorSpecials[1]);
-          break;
-        case "🔫 Gun":
-          setWeaponDesc(armorSpecials[2]);
-          break;
-        case "💎 Rock":
-          setWeaponDesc(armorSpecials[3]);
-          let newMaxLife = maxUserLife + 1;
-          setMaxUserLife(newMaxLife);
-          setUserLife(newMaxLife);
-          setXpModifier(2);
-          break;
-        default: 
-          break;
-      }
-    } else if (currentQuestionIndex === 8) {
-      // Handle the next question after selecting a weapon
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion },
-      ]);
-      setCurrentQuestionIndex(9);
-    } else if (currentQuestionIndex === 9) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion },
-      ]);
-      setCurrentQuestionIndex(10);
-    } else if (currentQuestionIndex === 10) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion },
-      ]);
-      setCurrentQuestionIndex(11);
-    } else if (currentQuestionIndex === 11) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion },
-      ]);
-      setCurrentQuestionIndex(12);
-      // First enemy encounter
-      const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
-      const randomEnemyLife = Math.floor(Math.random() * 10 + 5);
-      setEnemyLife(randomEnemyLife);
-      setEnemy(randomEnemy);
-      setChoices(["🏃 Escape", "🤺 Fight"]);
-      } else if (currentQuestionIndex === 12) {
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        if (userChoice === "🏃 Escape") {
-          setCurrentQuestionIndex(24);
-          setChoices([]); // Clear choices when the user escapes
-        } else if (userChoice === "🤺 Fight") {
-          gainXP(10);
-          setCurrentQuestionIndex(13);
-          setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
-        }
-      } else if (currentQuestionIndex === 13) {
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        if(enemyLife <= 0){
-          setCurrentQuestionIndex(23);
-        } else {
-          // Enemy Attack
-          const randomAttack = Math.floor(Math.random() * 2);
-          setEnemyAttack(randomAttack);
-          decreaseLife(randomAttack);
-          setCurrentQuestionIndex(14);
-        }
-        setChoices([]);
-    } else if (currentQuestionIndex === 14) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-    setCurrentQuestionIndex(15); 
-    } else if (currentQuestionIndex === 15) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      // Enemy Attack
-      const randomAttack = Math.floor(Math.random() * 2 + 1);
-      setEnemyAttack(randomAttack);
-      decreaseLife(enemyAttack);
-      setCurrentQuestionIndex(16); 
-    } else if (currentQuestionIndex === 16) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(17);
-      setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
-    } else if (currentQuestionIndex === 17) {
-      gainXP(5);
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,  answer: userChoice},
-      ]);
-      if(enemyLife <= 0){
-        setCurrentQuestionIndex(23);
-      } else {
-        // Enemy 2nd Attack
-        const randomAttack = Math.floor(Math.random() * 2);
-        setEnemyAttack(randomAttack);
-        decreaseLife(enemyAttack);
-        setCurrentQuestionIndex(18);
-      }
-      setChoices([]);
-    } else if (currentQuestionIndex === 18){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      if(userLife <= 0) {
-        setCurrentQuestionIndex(22);
-      } else {
-        setCurrentQuestionIndex(19);
-      }
-      
-    } else if (currentQuestionIndex === 19) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
-      setCurrentQuestionIndex(20); 
-    } else if (currentQuestionIndex === 20) {
-      gainXP(5);
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,  answer: userChoice},
-      ]);
-      if(enemyLife <= 0){
-        setCurrentQuestionIndex(23);
-      } else {
-        // Enemy Third Attack
-        const randomAttack = Math.floor(Math.random() * 2 + 1);
-        setEnemyAttack(randomAttack);
-        decreaseLife(enemyAttack);
-        if(userLife <= 0) {
-          setCurrentQuestionIndex(22);
-        } else {
-          setCurrentQuestionIndex(21);
-        }
-      }
-      setChoices([]);
-    } else if (currentQuestionIndex === 21){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      if(userLife <= 0) {
-        setCurrentQuestionIndex(22);
-      } else {
-        setCurrentQuestionIndex(23);
-      }
-    }  else if (currentQuestionIndex === 22){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]); // User is defeated case
-      setCurrentQuestionIndex(22);
-    } else if (currentQuestionIndex === 23){
-      // Enemy is defeated
-      setEnemyLife();
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      gainXP(50);
-      setCurrentQuestionIndex(25);
-    } else if (currentQuestionIndex === 24){
-      setChoices([]);
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      setCurrentQuestionIndex(25);
-    } else if (currentQuestionIndex === 25){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      setCurrentQuestionIndex(26);
-    } else if (currentQuestionIndex === 26){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      setRandomAnimal(animal[Math.floor(Math.random() * animal.length)]);
-      setCurrentQuestionIndex(27);
-    } else if (currentQuestionIndex === 27){
-      // Wild animal appear 
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      setCurrentQuestionIndex(28);
-      setChoices(["try to cure", "leave it there and ignore"]);
-    } else if (currentQuestionIndex === 28){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: userChoice},
-      ]);
-      if(userChoice === "try to cure") {
-        gainXP(10);
-        setCurrentQuestionIndex(29);
-      } else if (userChoice === "leave it there and ignore"){
-        setCurrentQuestionIndex(32);
-      }
-      setChoices([]);
-    } else if (currentQuestionIndex === 29){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion,},
-      ]);
-      setChoices(["Blessing of Amar", "Blessing of Inoin"])
-      setCurrentQuestionIndex(30);
-    } else if (currentQuestionIndex === 30){
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: userChoice},
-      ]);
-
-      if(userChoice === "Blessing of Inoin"){
-      setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
-      let newUserLife = userLife + 1;
-      setMaxUserLife(newUserLife);
-      setBasicAttack(basicAttack + 1);
-    } else{
-      setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
-      setBasicAttack(basicAttack + 3);
-    }
-      setChoices([]);
-      setCurrentQuestionIndex(31);
-    } else if (currentQuestionIndex === 31) {
-      gainXP(5);
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: userChoice},
-      ]);
-      setCurrentQuestionIndex(33);
-    } else if (currentQuestionIndex === 32) {
-      gainXP(5);
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(33);
-    } else if (currentQuestionIndex === 33) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setChoices(["Yes", "No"]);
-      setCurrentQuestionIndex(34);
-    } if (currentQuestionIndex === 34) {
-      if (userChoice === "Yes") {
-        // Update chatHistory for the user's choice
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        setChoices(["Go and see", "It could be dangerous"]);
-        setCurrentQuestionIndex(35);
-      } else if (userChoice === "No") {
-        // Update chatHistory for the user's choice
-        setChatHistory([
-          ...chatHistory,
-          { question: currentQuestion, answer: userChoice },
-        ]);
-        
-        setChoices([]);
-        // Handle the "No"
-        setCurrentQuestionIndex(48);
-      }
-      } else if (currentQuestionIndex === 35) {
-        if (userChoice === "Go and see") {
-          gainXP(10);
-          setChatHistory([
-            ...chatHistory,
-            { question: currentQuestion, answer: userChoice },
-          ]);
-      
-          // Clear choices
-          setChoices([]);
-          setCurrentQuestionIndex(36);
-        } else if (userChoice === "It could be dangerous") {
-          setChatHistory([
-            ...chatHistory,
-            { question: currentQuestion, answer: userChoice },
-          ]);
-          setCurrentQuestionIndex(48);
-        }
-      }
-    else if (currentQuestionIndex === 36) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(37);
-    } else if (currentQuestionIndex === 37) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(38);
-    }else if (currentQuestionIndex === 38) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setChoices(["What happened to you?", "Who cares..."])
-    setCurrentQuestionIndex(39);
-    }else if (currentQuestionIndex === 39) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: userChoice},
-      ]);
-      if (userChoice === "What happened to you?") {
-        setCurrentQuestionIndex(40);
-      } else if (userChoice === "Who cares...") {
-        setCurrentQuestionIndex(43);
-      }
-      setChoices([]);
-    } else if (currentQuestionIndex === 40) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(41);
-    } else if (currentQuestionIndex === 41) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(42);
-    }else if (currentQuestionIndex === 42) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setChoices([`No thanks`, `Swap with ${weapon}`])
-      setCurrentQuestionIndex(44);
-    } else if (currentQuestionIndex === 43) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(46); //check
-  } else if (currentQuestionIndex === 44) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion, answer: userChoice},
-    ]);
-    setChoices([]);
-    if(userChoice === `No thanks`){
-      setCurrentQuestionIndex(46);
+    if (fiftyChance()){
+      const magicDamage = (Math.floor(Math.random() * 3) + 6);
+      playMagicSound();
+      setAttack(magicDamage);
+      setEnemyLife(enemyLife - magicDamage);
     } else {
-      gainXP(10);
-      setWeapon("📿 Evelin's Necklace")
-      setCurrentQuestionIndex(45)
+      const magicDamage = (Math.floor(Math.random() * 3) + 6);
+      playMagicSound();
+      setAttack(magicDamage);
+      setEnemyLife(enemyLife - magicDamage);
     }
-  } else if (currentQuestionIndex === 45) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(46);
-  }else if (currentQuestionIndex === 46) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(47);
-  }else if (currentQuestionIndex === 47) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(48);
-  }else if (currentQuestionIndex === 48) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(49);
-  } else if (currentQuestionIndex === 49) {
-    setChatHistory([
-      ...chatHistory,
-      { question: currentQuestion},
-    ]);
-    setCurrentQuestionIndex(50);
-    } else if (currentQuestionIndex === 50) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion},
-      ]);
-      setCurrentQuestionIndex(51);
-      // 2nd enemy encounter
-      const secondEnemy = enemies[Math.floor(Math.random() * enemies.length)];
-      const secondEnemyLife = Math.floor(Math.random() * 15 + 8);
-      setEnemyLife(secondEnemyLife);
-      setEnemy(secondEnemy);
-      setChoices(["🏃 Escape", "🤺 Fight"]);
-    }  else if (currentQuestionIndex === 51) {
-      setChatHistory([
-        ...chatHistory,
-        { question: currentQuestion, answer: userChoice },
-      ]);
-        if (userChoice === "🏃 Escape") {
-          setCurrentQuestionIndex(60);
-          setChoices([]); // Clear choices when the user escapes
-        } else if (userChoice === "🤺 Fight") {
-          gainXP(10);
-          setCurrentQuestionIndex(52);
-          setChoices([`Kick`, `${classPower}`, `${weapon}`, `Escape`]);
-        }
-    }
+  }
 
+  function fiftyChance() {
+    const randomNumber = Math.random();
+    return randomNumber < 0.5;
+  }
+
+  const handleNextQuestion = () => {
+    const currentQuestion = getQuestionText(currentQuestionIndex);
+    setUserLevel(1);
+    setGoal(randomGoal);
+  
+    switch (currentQuestionIndex) {
+      case 0:
+        if (username) {
+          setChatHistory([
+            ...chatHistory,
+            { question: currentQuestion, answer: username },
+          ]);
+          setCurrentQuestionIndex(1);
+        }
+        break;
+      case 1:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(2);
+        break;
+      case 2:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(3);
+        setChoices(["🤵 Human", "🧙‍♀️ Witch", "🧛 Vampire", "👻 Ghost"]);
+        break;
+      case 3:
+        if (characterClass) {
+          setChatHistory([
+            ...chatHistory,
+            { question: currentQuestion, answer: characterClass },
+          ]);
+          setCurrentQuestionIndex(4);
+          setChoices([]);
+        }
+        break;
+      case 4:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(5);
+        break;
+      case 5:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(6);
+        setChoices(["keep exploring", "follow the light and exit the room"]);
+        break;
+      case 6:
+        setChoices([]);
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        switch (userChoice) {
+          case "keep exploring":
+            setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, answer: userChoice },
+            ]);
+            setCurrentQuestionIndex(7);
+            setChoices(["🧪 Potion", "🔫 Gun", "🗡️ Sword", "💎 Rock"]);
+            break;
+          case "follow the light and exit the room":
+            gainXP(5);
+            playDoorSound();
+            setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, answer: userChoice },
+            ]);
+            setCurrentQuestionIndex(9);
+            break;
+          default:
+            break;
+        }
+        break;
+      case 7:
+        if (weapon) {
+          setChatHistory([
+            ...chatHistory,
+            { question: currentQuestion, answer: weapon },
+          ]);
+          gainXP(10);
+          setCurrentQuestionIndex(8);
+          setChoices([]);
+          switch (weapon) {
+            case "🧪 Potion":
+              setUserLife(userLife + 2);
+              setBasicAttack(basicAttack + 1);
+              setWeaponDesc(armorSpecials[0]);
+              break;
+            case "🗡️ Sword":
+              setWeaponDesc(armorSpecials[1]);
+              break;
+            case "🔫 Gun":
+              setWeaponDesc(armorSpecials[2]);
+              break;
+            case "💎 Rock":
+              setWeaponDesc(armorSpecials[3]);
+              let newMaxLife = maxUserLife + 1;
+              setMaxUserLife(newMaxLife);
+              setUserLife(newMaxLife);
+              setXpModifier(2);
+              break;
+            default:
+              break;
+          }
+        }
+        break;
+      case 8:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(9);
+        playDoorSound();
+        break;
+      case 9:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(10);
+        break;
+      case 10:
+        setChatHistory([...chatHistory, { question: currentQuestion }]);
+        setCurrentQuestionIndex(11);
+        playEnemySound();
+        break;
+      case 11:
+        setChatHistory([
+          ...chatHistory,
+          { question: currentQuestion, answer: userChoice },
+        ]);
+        // First enemy encounter
+        const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+        const randomEnemyLife = Math.floor(Math.random() * 10 + 5);
+        setEnemyLife(randomEnemyLife);
+        setEnemy(randomEnemy);
+        setChoices(["🏃 Escape", "🤺 Fight"]);
+        setCurrentQuestionIndex(12);
+        break;
+      case 12:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice}
+        ]);
+        switch (userChoice) {
+          case "🏃 Escape":
+            setCurrentQuestionIndex(24);
+            setChoices([]); // Clear choices when the user escapes
+            break;
+          case "🤺 Fight":
+            gainXP(10);
+            setCurrentQuestionIndex(13);
+            setChoices([ `${classPower}`, `${weapon}`, `Escape`]);
+            break;
+          default:
+            break;
+        }
+          break;
+      case 13:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, answer: userChoice },
+          ]);
+          switch (userChoice) {
+            case "Kick":
+                setChatHistory([...chatHistory, { question: currentQuestion }]);
+                setCurrentQuestionIndex(13);
+                break;
+            case `${classPower}`:
+                setChatHistory([...chatHistory, { question: currentQuestion }]);
+                setCurrentQuestionIndex(13);
+                break;
+            case `${weapon}`:
+                setChatHistory([...chatHistory, { question: currentQuestion }]);
+                setCurrentQuestionIndex(13);
+                break;
+            case "Escape":
+                setCurrentQuestionIndex(22);
+                setChoices([]); // Clear choices when the user escapes
+                break;
+            default:
+                break;
+            }
+          if (enemyLife <= 0) {
+              setCurrentQuestionIndex(23);
+          } 
+          handleCombatChoice();
+          setCurrentQuestionIndex(14);
+          setChoices([]);
+          break;
+      case 14:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          // Enemy Attack
+          const randomAttack = Math.floor(Math.random() * 2) +1;
+          console.log("Enemy attack:"+enemyAttack+"Random Attack:"+randomAttack);
+          setEnemyAttack(randomAttack);
+          console.log("Enemy attack after set:"+enemyAttack+"Random Attack:"+randomAttack);
+          decreaseLife(randomAttack);
+          console.log("Enemy attack:"+randomAttack+"Random Attack:"+randomAttack+" -Loss Life:"+randomAttack);
+          setCurrentQuestionIndex(15);
+          break;
+      case 15:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          if (userLife <= 0) {
+            setCurrentQuestionIndex(22);
+          } else {
+            if (enemyLife <= 0) {
+              setCurrentQuestionIndex(23);
+            }
+          }
+          setCurrentQuestionIndex(16);  
+          break;
+      case 16:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+          setCurrentQuestionIndex(17);
+          break;
+      case 17:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion},
+          ]);
+         
+
+          if (userLife <= 0) {
+              setCurrentQuestionIndex(22);
+          } else {
+            if (enemyLife <= 0) {
+                setCurrentQuestionIndex(23);
+            } else {
+                // Enemy 2nd Attack if alive
+                const randomAttack = Math.floor(0, 1);
+                setEnemyAttack(randomAttack);
+                decreaseLife(enemyAttack);
+                setCurrentQuestionIndex(18);
+            }
+            setChoices([]);
+          }
+          break;
+      case 18:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setCurrentQuestionIndex(19);
+          break;
+      case 19:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion},
+          ]);
+          setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+          setCurrentQuestionIndex(20);
+          break;
+      case 20:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, userChoice },
+          ]);
+          if (enemyLife <= 0) {
+            setCurrentQuestionIndex(23);
+          } else {
+              // Enemy Third Attack
+              const randomAttack = Math.floor(Math.random() * 2 + 1);
+              setEnemyAttack(randomAttack);
+              decreaseLife(enemyAttack);
+              if (userLife <= 0) {
+                  setCurrentQuestionIndex(22);
+              } else {
+                  setCurrentQuestionIndex(21);
+              }
+          }
+          break;
+      case 21:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          if (userLife <= 0) {
+              setCurrentQuestionIndex(22);
+          } else {
+              setCurrentQuestionIndex(23);
+          }
+          break;
+      case 22:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]); // User is defeated case
+          setCurrentQuestionIndex(22);
+          break;
+      case 23:
+          // Enemy is defeated
+          setEnemyLife();
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          gainXP(50);
+          setCurrentQuestionIndex(25);
+          break;
+      case 24:
+          setChoices([]);
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setCurrentQuestionIndex(25);
+          break;
+      case 25:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setCurrentQuestionIndex(26);
+          break;
+      case 26:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setRandomAnimal(animal[Math.floor(Math.random() * animal.length)]);
+          setCurrentQuestionIndex(27);
+          break;
+      case 27:
+          // Wild animal appears
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setCurrentQuestionIndex(28);
+          setChoices(["try to cure", "leave it there and ignore"]);
+          break;
+      case 28:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, answer: userChoice },
+          ]);
+          if (userChoice === "try to cure") {
+              gainXP(10);
+              setCurrentQuestionIndex(29);
+          } else if (userChoice === "leave it there and ignore") {
+              setCurrentQuestionIndex(32);
+          }
+          setChoices([]);
+          break;
+      case 29:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
+          setChoices(["Blessing of Amar", "Blessing of Inoin"]);
+          setCurrentQuestionIndex(30);
+          break;
+      case 30:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion, answer: userChoice },
+          ]);
+          if (userChoice === "Blessing of Inoin") {
+              setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
+              let newUserLife = userLife + 1;
+              let newMaxLife = maxUserLife + 1;
+              setMaxUserLife(newMaxLife);
+              setUserLife(newUserLife);
+              setBasicAttack(basicAttack + 1);
+          } else {
+              setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
+              setBasicAttack(basicAttack + 3);
+          }
+          setChoices([]);
+          setCurrentQuestionIndex(31);
+          break;
+
+      default:
+        break;
+    }
   };
   
 
@@ -971,6 +931,30 @@ export default function Game() {
             )}
           </div>
         </div>
+
+
+        {/**Sound effects for the game dynamics */}
+        <audio ref={doorRef}>
+          <source src="https://tarallotest.it/halloween/door-43633.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={enemyRef}>
+          <source src="https://tarallotest.it/halloween/breeze-of-blood-122253.mp3" type="audio/mpeg" />
+        </audio>
+
+        {/** User class special attacks */}
+        <audio ref={biteRef}>
+          <source src="https://tarallotest.it/halloween/monster-bite-44538.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={magicRef}>
+          <source src="https://tarallotest.it/halloween/magic-spell-6005.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={ghostatkRef}>
+          <source src="https://tarallotest.it/halloween/the-appearance-of-a-mysterious-creature-143028.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={punchRef}>
+          <source src="https://tarallotest.it/halloween/punch-140236.mp3" type="audio/mpeg" />
+        </audio>
+        
 
         <div className="game-textarea">
           <div className="chat-history">
