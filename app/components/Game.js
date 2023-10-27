@@ -46,6 +46,7 @@ export default function Game() {
   const owlRef = useRef(null);
   const snakeRef = useRef(null);
   const mouseRef = useRef(null);
+  const goodWitchRef = useRef(null);
 
 
 
@@ -335,7 +336,7 @@ export default function Game() {
           setMaxUserLife(2);
           setUserLife(2);
           setBasicAttack(3);
-          setClassPower("✨ Magical Hit")
+          setClassPower("✨ Arcane Hit")
           break;
         case "🧛 Vampire":
           setMaxUserLife(3);
@@ -365,7 +366,7 @@ export default function Game() {
       case 30:
       case 34:
       case 35:
-      case 39:
+      case 38:
       case 42:
       case 44:
         setUserChoice(choice);
@@ -404,7 +405,7 @@ export default function Game() {
       case "🩸 Bite":
         handleBite();
         break;
-      case "✨ Magical Hit":
+      case "✨ Arcane Hit":
         handleMagic();
         break;
       case "Escape":
@@ -427,7 +428,7 @@ export default function Game() {
       case "💎 Rock":
         handleAttack(2 + basicAttack);
         break;
-      case "📿 Evelin's Necklace":
+      case "📿 Necklace":
         handleAttack((Math.floor(Math.random() * 30 + 2)) + basicAttack);
         break;
       default:
@@ -941,6 +942,115 @@ export default function Game() {
         ]);
         setCurrentQuestionIndex(36);
         break;
+      case 36:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion,}
+        ]);
+        setCurrentQuestionIndex(37);
+        break;
+      case 37:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ]);
+        setChoices(["What happened to you?", "Who cares..."]);
+        setCurrentQuestionIndex(38);
+        break;
+      case 38:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice}
+        ]);
+        if(userChoice === "What happened to you?"){
+          setCurrentQuestionIndex(39)
+        } else {
+          setCurrentQuestionIndex(47);
+        }
+        setChoices([]);
+        break;
+      case 39:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion }
+        ]);
+        setCurrentQuestionIndex(40);
+        break;
+      case 40:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion }
+        ]);
+        setCurrentQuestionIndex(41);
+        break;
+      case 41:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion }
+        ]);
+        setCurrentQuestionIndex(42);
+        break;
+      case 42:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion }
+        ]);
+        setChoices([`No, thanks`, `Swap for ${weapon}`]);
+        setCurrentQuestionIndex(44);
+        break;
+      case 43:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion }
+        ]);
+        setCurrentQuestionIndex(46);
+        break;
+      case 44:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice }
+        ]);
+        if(userChoice === `No, thanks`){
+          setCurrentQuestionIndex(46);
+        } else {
+          setWeapon("📿 Necklace");
+          setCurrentQuestionIndex(45);
+        }
+        setChoices([]);
+        break;
+      case 45:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ]);
+        setCurrentQuestionIndex(46);
+        if(goodWitchRef.current){
+          goodWitchRef.current.play();
+        }
+        break;
+      case 46:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ]);
+        setCurrentQuestionIndex(47);
+        break;
+      case 47:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ]);
+        setCurrentQuestionIndex(48);
+        break;
+      case 48:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ]);
+        setCurrentQuestionIndex(49);
+        break;
+
+      
       default:
         break;
     }
@@ -1070,6 +1180,11 @@ export default function Game() {
         </audio>
         <audio ref={mouseRef}>
           <source src="https://tarallotest.it/halloween/mouse-6821.mp3" type="audio/mpeg" />
+        </audio>
+
+        {/** Additional sounds */}
+        <audio ref={goodWitchRef}>
+          <source src="https://tarallotest.it/halloween/068286_lighting-a-cigarettewav-47671.mp3" type="audio/mpeg" />
         </audio>
         
 
