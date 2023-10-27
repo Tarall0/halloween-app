@@ -181,7 +181,7 @@ export default function Game() {
     } else if(index === 15) {
       return `Oh no, ${enemy} (${enemyLife} life points) gets angry and hits you. `;
     }else if(index === 16) {
-      return `${enemy} hurls himself at you, luckily you manage to dodge in time. However, this inflicts ${enemyAttack} damage on you.`;
+      return `${enemy} hurls itself against you, luckily you manage to dodge it in time. However, this inflicts ${enemyAttack} damage on you.`;
     }else if(index === 17) {
       return `${enemy} is in front of you and it is about to get up from the ground! Hurry up ${username}, what do you choose to do?`;
     }else if(index === 18) {
@@ -687,10 +687,10 @@ export default function Game() {
             default:
                 break;
             }
-          if (enemyLife <= 0) {
-              setCurrentQuestionIndex(23);
-          } 
           handleCombatChoice();
+          if (enemyLife <= 0) {
+            setCurrentQuestionIndex(23);
+          } 
           setCurrentQuestionIndex(14);
           setChoices([]);
           break;
@@ -785,6 +785,7 @@ export default function Game() {
                   setCurrentQuestionIndex(21);
               }
           }
+          setChoices([]);
           break;
       case 21:
           setChatHistory([
@@ -875,10 +876,9 @@ export default function Game() {
           ]);
           if (userChoice === "Blessing of Inoin") {
               setBlessing("Your gesture was blessed by the great god Inoin. You gain 1 heart and a +1 basic attack");
-              let newUserLife = userLife + 1;
               let newMaxLife = maxUserLife + 1;
               setMaxUserLife(newMaxLife);
-              setUserLife(newUserLife);
+              gainLife(1);
               setBasicAttack(basicAttack + 1);
           } else {
               setBlessing("Your gesture was blessed by the great god Amar. You gain +3 basic attack");
@@ -887,7 +887,20 @@ export default function Game() {
           setChoices([]);
           setCurrentQuestionIndex(31);
           break;
-
+      case 31:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion},
+        ]);
+        setCurrentQuestionIndex(33);
+        break;
+      case 32:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice},
+        ]);
+        setCurrentQuestionIndex(33);
+        break;
       default:
         break;
     }
