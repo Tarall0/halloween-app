@@ -40,6 +40,10 @@ export default function Game() {
   const biteRef = useRef(null);
   const ghostatkRef = useRef(null);
   const magicRef = useRef(null);
+  const zombieRef = useRef(null);
+  const witchRef = useRef(null);
+  const wolfRef = useRef(null);
+  const spiritRef = useRef(null);
 
 
 
@@ -128,7 +132,7 @@ export default function Game() {
   const enemies = [
     "🧟 ZOMBIE",
     "🧌 CORRUPTED WITCH",
-    "👹 WANDERING SPIRIT",
+    //"👹 WANDERING SPIRIT",
     "🐺 EVIL WEREWOLF",
   ]
 
@@ -472,6 +476,27 @@ export default function Game() {
     return randomNumber < 0.5;
   }
 
+  const handleEnemiesSounds = (enemy) =>{
+    switch(enemy){
+      case "🧟 ZOMBIE":
+        if(zombieRef.current){
+          zombieRef.current.play();
+        }
+        break;
+      case "🐺 EVIL WEREWOLF":
+        if(wolfRef.current){
+          wolfRef.current.play();
+        }
+        break;
+      case "🧌 CORRUPTED WITCH":
+        if(witchRef.current){
+          witchRef.current.play();
+        }
+      default:
+        break;
+    }
+  }
+
   const handleNextQuestion = () => {
     const currentQuestion = getQuestionText(currentQuestionIndex);
     setUserLevel(1);
@@ -595,6 +620,7 @@ export default function Game() {
         // First enemy encounter
         const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
         const randomEnemyLife = Math.floor(Math.random() * 10 + 5);
+        handleEnemiesSounds(randomEnemy);
         setEnemyLife(randomEnemyLife);
         setEnemy(randomEnemy);
         setChoices(["🏃 Escape", "🤺 Fight"]);
@@ -954,6 +980,18 @@ export default function Game() {
         <audio ref={punchRef}>
           <source src="https://tarallotest.it/halloween/punch-140236.mp3" type="audio/mpeg" />
         </audio>
+
+        {/** Enemies sounds */}
+        <audio ref={zombieRef}>
+          <source src="https://tarallotest.it/halloween/zombie-6851.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={wolfRef}>
+          <source src="https://tarallotest.it/halloween/wolf-howling-140235.mp3" type="audio/mpeg" />
+        </audio>
+        <audio ref={witchRef}>
+          <source src="https://tarallotest.it/halloween/witch-laughing-104760.mp3" type="audio/mpeg" />
+        </audio>
+
         
 
         <div className="game-textarea">
