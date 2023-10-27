@@ -30,6 +30,7 @@ export default function Game() {
   const [xpModifier, setXpModifier] = useState(1);
   const [hasLeveled, setHasLeveled] = useState(false);
   const [classPower, setClassPower] = useState("");
+  const [gameOver, setGameOver] = useState(false);
 
   const [doorSound, setDoorSound] = useState(false);
   const doorRef = useRef(null);
@@ -438,6 +439,9 @@ export default function Game() {
   const handleAttack = (damage) => {
     setEnemyLife(enemyLife - damage);
     setAttack(damage);
+    if (enemyLife <= 0) {
+      setCurrentQuestionIndex(23);
+    } 
   };
 
   const handleBite = () => {
@@ -593,6 +597,7 @@ export default function Game() {
           setChoices([]);
           switch (weapon) {
             case "🧪 Potion":
+              setMaxUserLife(maxUserLife + 2);
               setUserLife(userLife + 2);
               setBasicAttack(basicAttack + 1);
               setWeaponDesc(armorSpecials[0]);
@@ -690,8 +695,9 @@ export default function Game() {
           handleCombatChoice();
           if (enemyLife <= 0) {
             setCurrentQuestionIndex(23);
-          } 
-          setCurrentQuestionIndex(14);
+          } else {
+            setCurrentQuestionIndex(14);
+          }
           setChoices([]);
           break;
       case 14:
@@ -715,11 +721,11 @@ export default function Game() {
           ]);
           if (userLife <= 0) {
             setCurrentQuestionIndex(22);
-          } else {
-            if (enemyLife <= 0) {
-              setCurrentQuestionIndex(23);
-            }
+          } 
+          if (enemyLife <= 0) {
+            setCurrentQuestionIndex(23);
           }
+          
           setCurrentQuestionIndex(16);  
           break;
       case 16:
@@ -735,10 +741,21 @@ export default function Game() {
               ...chatHistory,
               { question: currentQuestion, answer: userChoice},
           ]);
-         
-
+          if (enemyLife <= 0) {
+            setCurrentQuestionIndex(23);
+          }
+          else {
+            setCurrentQuestionIndex(18);
+          }
+          setChoices([]);
+          break;
+      case 18:
+          setChatHistory([
+              ...chatHistory,
+              { question: currentQuestion },
+          ]);
           if (userLife <= 0) {
-              setCurrentQuestionIndex(22);
+            setCurrentQuestionIndex(22);
           } else {
             if (enemyLife <= 0) {
                 setCurrentQuestionIndex(23);
@@ -747,17 +764,9 @@ export default function Game() {
                 const randomAttack = Math.floor(0, 1);
                 setEnemyAttack(randomAttack);
                 decreaseLife(enemyAttack);
-                setCurrentQuestionIndex(18);
+                setCurrentQuestionIndex(19);
             }
-            setChoices([]);
           }
-          break;
-      case 18:
-          setChatHistory([
-              ...chatHistory,
-              { question: currentQuestion },
-          ]);
-          setCurrentQuestionIndex(19);
           break;
       case 19:
           setChatHistory([
@@ -794,6 +803,7 @@ export default function Game() {
           ]);
           if (userLife <= 0) {
               setCurrentQuestionIndex(22);
+              setGameOver(true);
           } else {
               setCurrentQuestionIndex(23);
           }
@@ -1003,11 +1013,11 @@ export default function Game() {
               )}
             </div>
 
-            {(userLife <= 0) ? (
+            {gameOver ? (
               <div className="game-lose">
 
                 <h2>Game Over</h2>
-                <h4>You lost all your <b>hearts ❤️</b> {username} :(</h4>
+                <h4>{enemy} attacked you ({enemyAttack} damages) and you've been defeated {username}. You lost all your <b>hearts ❤️</b> :(</h4>
                 <p>You can reload the page or click on "Restart game"</p>
                 <button>Restart Game</button>
               </div>
