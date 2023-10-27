@@ -17,8 +17,6 @@ export default function Game() {
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
   const [userChoice, setUserChoice] = useState("");
   const hearts = Array(userLife).fill('❤️');
-  const [blackHeartsCount, setBlackHeartsCount] = useState();
-  const blackHearts = Array(blackHeartsCount).fill('🖤');
   const [enemy, setEnemy] = useState("");
   const [enemyLife, setEnemyLife] = useState(10);
   const [basicAttack, setBasicAttack] = useState(1);
@@ -83,7 +81,6 @@ export default function Game() {
       let newLife = userLife - amount;
       let blackHeartsnr = maxUserLife - newLife;
       setUserLife(newLife);
-      setBlackHeartsCount(blackHeartsnr);
     } else if (userLife < 0) {
       setUserLife(0);
     }
@@ -295,9 +292,6 @@ export default function Game() {
   
 
   useEffect(() => {
-
-    let blackHeartsnr = maxUserLife - userLife;
-    setBlackHeartsCount(blackHeartsnr);
 
     if (currentQuestionIndex < questions.length) {
       const question = getQuestionText(currentQuestionIndex);
@@ -671,7 +665,7 @@ export default function Game() {
       case 13:
           setChatHistory([
               ...chatHistory,
-              { question: currentQuestion, answer: userChoice },
+              { question: currentQuestion },
           ]);
           switch (userChoice) {
             case "Kick":
@@ -703,7 +697,7 @@ export default function Game() {
       case 14:
           setChatHistory([
               ...chatHistory,
-              { question: currentQuestion },
+              { question: currentQuestion, answer: userChoice },
           ]);
           // Enemy Attack
           const randomAttack = Math.floor(Math.random() * 2) +1;
@@ -922,12 +916,8 @@ export default function Game() {
                 <span key={index} className="heart-emoji">
                   {heart}
                 </span>
-              ))}
-               {blackHearts.map((heart, index) => (
-                  <span key={index} className="heart-emoji">
-                    {heart}
-                  </span>
-              ))}
+              ))} 
+              {<span>{userLife} / {maxUserLife}</span>}
             </p>
           </div>) : ("")}
           <div className="question">
