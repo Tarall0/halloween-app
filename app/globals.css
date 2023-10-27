@@ -618,3 +618,34 @@ border-radius: 100%;
 .stats-label{
   font-size: x-small;
 }
+
+.game-lose{
+  width: 80%;
+  background-color: var(--background);
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX( -50%);
+  z-index: 999;
+  padding: 1em;
+  border-radius: .5em;
+  text-align: center;
+}
+
+.game-lose h2{
+  margin: 1em auto;
+}
+
+.game-lose p {
+  margin: .5em auto;
+}
+
+.game-lose button{
+  background-color: var(--halloweenPurple);
+  appearance: none;
+  border: none;
+  padding: 1em 2em;
+  border-radius: .5em;
+  color: var(--foreground);
+  margin: 1em;
+}

@@ -901,6 +901,36 @@ export default function Game() {
         ]);
         setCurrentQuestionIndex(33);
         break;
+      case 33:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion}
+        ])
+        setChoices(["yes", "no"]);
+        setCurrentQuestionIndex(34);
+        break;
+      case 34:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice},
+        ]);
+        switch(userChoice){
+          case "yes":
+            setCurrentQuestionIndex(35);
+            break;
+          case "no":
+            setCurrentQuestionIndex(48);
+            break;
+        }
+        setChoices([]);
+        break;
+      case 35:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion,}
+        ]);
+        setCurrentQuestionIndex(36);
+        break;
       default:
         break;
     }
@@ -976,8 +1006,10 @@ export default function Game() {
             {(userLife <= 0) ? (
               <div className="game-lose">
 
-                <h3>Game Over</h3>
-                <h4>You lost this session</h4>
+                <h2>Game Over</h2>
+                <h4>You lost all your <b>hearts ❤️</b> {username} :(</h4>
+                <p>You can reload the page or click on "Restart game"</p>
+                <button>Restart Game</button>
               </div>
             ) : (
               ""
