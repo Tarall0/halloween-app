@@ -502,7 +502,7 @@ border-radius: 100%;
   position: relative;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .user-info{
     display: grid;
   }
