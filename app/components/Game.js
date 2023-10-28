@@ -518,7 +518,7 @@ export default function Game() {
   }
 
   const handleFist = () => {
-    const punchDamage = (Math.floor(Math.random * 8) + 1) * basicAttack;
+    const punchDamage = (Math.floor(Math.random() * 8) + 1) * basicAttack;
     playPunchSound();
     setAttack(punchDamage);
     setEnemyLife(enemyLife - punchDamage);
