@@ -14,6 +14,7 @@ export default function Game() {
   const [chatHistory, setChatHistory] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [choices, setChoices] = useState([]);
+  const isThreeItems = choices.length === 3;
   const [selectedChoiceIndex, setSelectedChoiceIndex] = useState(null);
   const [userChoice, setUserChoice] = useState("");
   const hearts = Array(userLife).fill('❤️');
@@ -1047,9 +1048,23 @@ export default function Game() {
           ...chatHistory,
           {question: currentQuestion}
         ]);
+        // First enemy encounter
+        const randomStrongEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+        const randomStrongEnemyLife = Math.floor(Math.random() * 18 + 10);
+        handleEnemiesSounds(randomStrongEnemy);
+        setEnemyLife(randomStrongEnemyLife);
+        setEnemy(randomStrongEnemy);
+        setChoices(["🏃 Escape", "🤺 Fight"]);
         setCurrentQuestionIndex(49);
         break;
-
+      case 49:
+        setChatHistory([
+          ...chatHistory,
+          {question: currentQuestion, answer: userChoice}
+        ]);
+        setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+        setCurrentQuestionIndex(50);
+        break;
       
       default:
         break;
@@ -1097,13 +1112,13 @@ export default function Game() {
                 className="user-input"
               />
             ) : (
-              <div className="questions-buttons">
+              <div className={`${isThreeItems ? 'questions-buttons' : 'questions-buttons'}`}>
                 {choices.map((choice, index) => (
                   <button
                     key={index}
                     onClick={() => handleChoiceClick(choice, index)}
                     disabled={isTyping}
-                    className={selectedChoiceIndex === index ? "selected" : ""}
+                    className={`${selectedChoiceIndex === index ? "selected" : ""} ${isThreeItems && index === 2 ? 'second-row' : ''}`}
                   >
                     {choice}
                   </button>
