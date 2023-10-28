@@ -24,7 +24,7 @@ export default function Game() {
   const [attack, setAttack] = useState(); 
   const [enemyAttack, setEnemyAttack] = useState("");
   const [userXP, setUserXP] = useState(0);
-  const [userLevel, setUserLevel] = useState();
+  const [userLevel, setUserLevel] = useState(1);
   const [maxXPForNextLevel, setMaxXPForNextLevel] = useState(100);
   const [randomAnimal, setRandomAnimal] = useState("");
   const [blessing, setBlessing] = useState();
@@ -581,7 +581,6 @@ export default function Game() {
 
   const handleNextQuestion = () => {
     const currentQuestion = getQuestionText(currentQuestionIndex);
-    setUserLevel(1);
     setGoal(randomGoal);
   
     switch (currentQuestionIndex) {
