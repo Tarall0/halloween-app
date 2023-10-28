@@ -48,6 +48,7 @@ export default function Game() {
   const snakeRef = useRef(null);
   const mouseRef = useRef(null);
   const goodWitchRef = useRef(null);
+  const necklaceRef = useRef(null);
 
 
 
@@ -76,6 +77,24 @@ export default function Game() {
   const playMagicSound = () => {
     if(magicRef.current){
       magicRef.current.play();
+    }
+  }
+
+  const playNecklaceSound = () => {
+    if(necklaceRef.current){
+      necklaceRef.current.play();
+    }
+  }
+
+  const playGhostAtkSound = () => {
+    if(ghostatkRef.current){
+      ghostatkRef.current.play();
+    }
+  }
+
+  const playPunchSound = () => {
+    if(punchRef.current){
+      punchRef.current.play();
     }
   }
 
@@ -375,6 +394,7 @@ export default function Game() {
       case 13:
       case 17:
       case 20:
+      case 50:
         handleCombatChoice(choice);
         break;
       case 7:
@@ -403,11 +423,20 @@ export default function Game() {
       case weapon:
         handleWeaponChoice();
         break;
+      case "📿 Necklace":
+        handleNecklace();
+        break;
       case "🩸 Bite":
         handleBite();
         break;
       case "✨ Arcane Hit":
         handleMagic();
+        break;
+      case "💀 Death Touch":
+        handleGhostAtk();
+        break;
+      case "👊 Power Fist":
+        handleFist();
         break;
       case "Escape":
         setChoices([]);
@@ -447,7 +476,7 @@ export default function Game() {
   };
 
   const handleBite = () => {
-    const biteDamage = (Math.floor(Math.random() * 6)) + basicAttack;
+    const biteDamage = (Math.floor(Math.random() * 8)) + basicAttack;
     playBiteSound();
     setAttack(biteDamage);
     setEnemyLife(enemyLife - biteDamage);
@@ -461,16 +490,46 @@ export default function Game() {
   const handleMagic = () => {
 
     if (fiftyChance()){
-      const magicDamage = (Math.floor(Math.random() * 3) + 6);
+      const magicDamage = (Math.floor(Math.random() * 3) + 5);
       playMagicSound();
       setAttack(magicDamage);
       setEnemyLife(enemyLife - magicDamage);
     } else {
-      const magicDamage = (Math.floor(Math.random() * 3) + 6);
+      const magicDamage = (Math.floor(Math.random() * 10) + 6);
       playMagicSound();
       setAttack(magicDamage);
       setEnemyLife(enemyLife - magicDamage);
     }
+  }
+
+  const handleGhostAtk = () => {
+
+    if (fiftyChance()){
+      const ghostDamage = (Math.floor(Math.random() * 5) + basicAttack) * 2;
+      playGhostAtkSound();
+      setAttack(ghostDamage);
+      setEnemyLife(enemyLife - ghostDamage);
+    } else {
+      const ghostDamage = (Math.floor(Math.random() * 5) + basicAttack) * 2;
+      playGhostAtkSound();
+      setAttack(ghostDamage);
+      setEnemyLife(enemyLife - ghostDamage);
+    }
+  }
+
+  const handleFist = () => {
+    const punchDamage = basicAttack * (Math.floor(Math.random * 8) + 1);
+    playPunchSound();
+    setAttack(punchDamage);
+    setEnemyLife(enemyLife - punchDamage);
+  }
+
+  const handleNecklace = () => {
+    const rndDamage = (Math.floor(Math.random() * 20) + 1);
+    playNecklaceSound();
+    setAttack(rndDamage);
+    setEnemyLife(enemyLife - rndDamage);
+    
   }
 
   function fiftyChance() {
@@ -1014,6 +1073,7 @@ export default function Game() {
         if(userChoice === `No, thanks`){
           setCurrentQuestionIndex(46);
         } else {
+          gainXP(10);
           setWeapon("📿 Necklace");
           setCurrentQuestionIndex(45);
         }
@@ -1175,9 +1235,14 @@ export default function Game() {
           <source src="https://tarallotest.it/halloween/punch-140236.mp3" type="audio/mpeg" />
         </audio>
 
+        {/** Weapon sounds */}
+        <audio ref={necklaceRef}>
+          <source src="https://tarallotest.it/halloween/punch-140236.mp3" type="audio/mpeg" />
+        </audio>
+
         {/** Enemies sounds */}
         <audio ref={zombieRef}>
-          <source src="https://tarallotest.it/halloween/zombie-6851.mp3" type="audio/mpeg" />
+          <source src="https://tarallotest.it/halloween/metal-design-explosion-13491.mp3" type="audio/mpeg" />
         </audio>
         <audio ref={wolfRef}>
           <source src="https://tarallotest.it/halloween/wolf-howling-140235.mp3" type="audio/mpeg" />
