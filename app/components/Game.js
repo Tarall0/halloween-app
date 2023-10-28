@@ -1188,7 +1188,8 @@ export default function Game() {
             <div className="submit-button">
               { (userLife > 0)?(<button 
                 onClick={handleNextQuestion} 
-                disabled={isTyping || !inputText || currentQuestionIndex === 22}>
+                disabled={isTyping || !inputText || currentQuestionIndex === 22}
+                className={`${isTyping ? "button-typing" : ""}`}>
                   {isTyping ? "Writing... " : "Next"}
               </button>) : (
                 <button

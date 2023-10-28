@@ -472,6 +472,11 @@ border-radius: 100%;
   padding: 1em 2em;
   color: var(--foreground);
   width: 250px;
+  transition: all .2s ease-in-out;
+}
+
+.button-typing{
+  background-color: var(--altDark) !important;
 }
 
 .stop-music{
