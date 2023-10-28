@@ -1237,12 +1237,12 @@ export default function Game() {
 
         {/** Weapon sounds */}
         <audio ref={necklaceRef}>
-          <source src="https://tarallotest.it/halloween/punch-140236.mp3" type="audio/mpeg" />
+          <source src="https://tarallotest.it/halloween/metal-design-explosion-13491.mp3" type="audio/mpeg" />
         </audio>
 
         {/** Enemies sounds */}
         <audio ref={zombieRef}>
-          <source src="https://tarallotest.it/halloween/metal-design-explosion-13491.mp3" type="audio/mpeg" />
+          <source src="https://tarallotest.it/halloween/zombie-6851.mp3" type="audio/mpeg" />
         </audio>
         <audio ref={wolfRef}>
           <source src="https://tarallotest.it/halloween/wolf-howling-140235.mp3" type="audio/mpeg" />
