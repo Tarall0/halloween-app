@@ -514,6 +514,21 @@ border-radius: 100%;
   border-radius: .5em;
   padding: .5em;
   position: relative;
+  animation: userPanelFade .8s linear;
+}
+
+@keyframes userPanelFade {
+  0%{
+    position: absolute;
+    opacity: 0;
+    top: -100%;
+    filter: blur(9px);
+  }
+  100%{
+    opacity: 1;
+    filter: blur(0px);
+    position: relative;
+  }
 }
 
 @media (max-width: 480px) {
