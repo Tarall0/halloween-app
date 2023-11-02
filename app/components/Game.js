@@ -105,6 +105,7 @@ export default function Game() {
       setUserLife(newLife);
     } else if (userLife < 0) {
       setUserLife(0);
+      setGameOver(true);
     }
   };
 
@@ -588,7 +589,7 @@ export default function Game() {
         if (username) {
           setChatHistory([
             ...chatHistory,
-            { question: currentQuestion, answer: username },
+            { question: currentQuestion, answer: `My name is ${username}` },
           ]);
           setCurrentQuestionIndex(1);
         }
@@ -606,7 +607,7 @@ export default function Game() {
         if (characterClass) {
           setChatHistory([
             ...chatHistory,
-            { question: currentQuestion, answer: characterClass },
+            { question: currentQuestion, answer: `I am a ${characterClass}` },
           ]);
           setCurrentQuestionIndex(4);
           setChoices([]);
@@ -721,7 +722,7 @@ export default function Game() {
           case "🤺 Fight":
             gainXP(10);
             setCurrentQuestionIndex(13);
-            setChoices([ `${classPower}`, `${weapon}`, `Escape`]);
+            setChoices([ `${classPower}`, `${weapon}`, `🏃 Escape`]);
             break;
           default:
             break;
@@ -745,7 +746,7 @@ export default function Game() {
                 setChatHistory([...chatHistory, { question: currentQuestion }]);
                 setCurrentQuestionIndex(13);
                 break;
-            case "Escape":
+            case "🏃 Escape":
                 setCurrentQuestionIndex(22);
                 setChoices([]); // Clear choices when the user escapes
                 break;
@@ -793,7 +794,7 @@ export default function Game() {
               ...chatHistory,
               { question: currentQuestion },
           ]);
-          setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+          setChoices([`${classPower}`, `${weapon}`, `🏃 Escape`]);
           setCurrentQuestionIndex(17);
           break;
       case 17:
@@ -833,7 +834,7 @@ export default function Game() {
               ...chatHistory,
               { question: currentQuestion},
           ]);
-          setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+          setChoices([`${classPower}`, `${weapon}`, `🏃 Escape`]);
           setCurrentQuestionIndex(20);
           break;
       case 20:
@@ -1113,7 +1114,7 @@ export default function Game() {
         handleEnemiesSounds(randomStrongEnemy);
         setEnemyLife(randomStrongEnemyLife);
         setEnemy(randomStrongEnemy);
-        setChoices(["🏃 Escape", "🤺 Fight"]);
+        setChoices(["🏃 Try to escape", "🤺 Fight"]);
         setCurrentQuestionIndex(49);
         break;
       case 49:
@@ -1121,7 +1122,7 @@ export default function Game() {
           ...chatHistory,
           {question: currentQuestion, answer: userChoice}
         ]);
-        setChoices([`${classPower}`, `${weapon}`, `Escape`]);
+        setChoices([`${classPower}`, `${weapon}`, `🏃 Try to escape`]);
         setCurrentQuestionIndex(50);
         break;
       
@@ -1135,7 +1136,7 @@ export default function Game() {
     <div className="game">
       <div className="game-box">
         <div className={`game-head`}>
-          {characterClass && (userLife >= 0) ? (<div className="user-info">
+          {characterClass ? (<div className="user-info">
             <div className="user-basic"><b>{username}</b> — {characterClass} (Lvl {userLevel})
             <div className="xp-bar">
               <div className="xp-progress" style={{ width: `${(userXP / maxXPForNextLevel) * 100}%` }}>

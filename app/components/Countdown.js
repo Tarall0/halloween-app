@@ -111,7 +111,7 @@ const Countdown = () => {
         // Elements to render when the condition is false
           showMessage && (
             <div className='not-halloween'>
-              <p>🎃 There is still time for Halloween</p>
+              <p>🎃 There is still time for the next Halloween</p>
               <div className='halloween-buttons'>
                 <button onClick={playGame}> Play Game</button>
                 <button onClick={handleDimiss}><b>X</b> Dimiss</button>
